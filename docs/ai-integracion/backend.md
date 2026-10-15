@@ -26,6 +26,9 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí, por contrato y exposición. `dotnet test WebApi.Tests/WebApi.Tests.csproj --filter "FullyQualifiedName~OpenApi"`.
 **Fuera de alcance:** `operationId` y metadatos (BE-02); servir la ruta (BE-03); resúmenes (BE-04 y BE-05).
 **Notas:**
+- fapi-back está en el worktree `fapi-back-ai` (rama `feat/ai-integracion`): el working tree `fapi-back` lo ocupa `feat/localization`. Un solo documento `v4`, también para Scalar (D-17).
+- `PublicApiSurfaceTests` resuelve cada request contra todas las acciones v4 (la más literal gana): `tickets/{id}` no tiene `:guid`, así que comparar solo contra el documento no distinguía `tickets/load`.
+- Pendiente de la revisión, fuera de alcance: RNF-03 depende de la colección (no hay prueba propia de esquemas de auth), y las anotaciones OpenAPI de acciones internas ya no llegan a ningún documento.
 
 ### BE-02 — Agregar `operationId` estable y metadatos del documento
 **Objetivo:** que cada operación tenga un `operationId` estable y que el documento declare servidores reales, autenticación y descripción.

@@ -114,3 +114,9 @@ Reglas de este archivo:
 - **Por qué:** el nginx de test y el de live ya mandan `location ^~ /api` al back. El CD no toca nginx, que se cambia a mano (`infra/nginx/live/README.md`). Con otra ruta habría un paso manual.
 - **Consecuencias:** cero cambios en nginx. La ruta hereda el rate limiting de `/api`.
 - **Estado:** confirmada.
+
+### D-17 — Un solo documento OpenAPI: el público
+- **Decisión:** fapi-back registra un solo documento, `v4`, con las acciones `[PublicApi]`. Scalar en Development muestra ese mismo documento; no se conserva un documento completo con lo interno, y el grupo v5 (`Controllers/V5/ValuesController`) se queda sin documento.
+- **Por qué:** lo interno (dashboard, Host, DevExtreme) no es contrato, y un segundo documento sería configuración que nadie consume. Así Scalar muestra lo mismo que reciben los integradores.
+- **Consecuencias:** las pruebas de contrato OpenAPI solo cubren operaciones públicas. Las rutas internas se siguen probando por HTTP.
+- **Estado:** confirmada (técnica, la fijó BE-01).
