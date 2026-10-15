@@ -47,7 +47,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | DOC-03 | Corregir el enlace del SDK de Node en `llms.txt` | docs | — | hecho | fapi-docs@b5eec29 |
 | DOC-04 | Generar la página de errores de Comercio Exterior | docs | — | hecho | fapi-docs@73d326f, fapi-reusables@3be8d36 |
 | SK-01 | Armar el esqueleto del repo, los manifiestos y el CI de enlaces | skills | — | hecho | fiscalapi-ai@6caa2c4 |
-| SK-10 | Validar en el check semanal los enlaces "Docs:" del OpenAPI | skills | SK-01, BE-05 | pendiente | |
+| SK-10 | Validar en el check semanal los enlaces "Docs:" del OpenAPI | skills | SK-01, BE-05 | hecho | |
 | SK-02 | Escribir `fiscalapi-integracion` y `primer-timbre` | skills | SK-01, DOC-01 | pendiente | |
 | SK-03 | Escribir `fiscalapi-diagnostico` y `explicar-error` | skills | SK-01, DOC-02 | hecho | fiscalapi-ai@bce6b59 |
 | SK-04 | Escribir `fiscalapi-ingreso-egreso` | skills | SK-02, MED-01 | pendiente | |

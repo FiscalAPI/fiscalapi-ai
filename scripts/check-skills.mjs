@@ -1,11 +1,15 @@
 // Revisa lo que publica el plugin antes de que llegue a un integrador:
 // - el frontmatter de cada SKILL.md sigue el estándar de agentskills.io;
-// - cada enlace a docs.fiscalapi.com responde 200 y, si lleva ancla, el ancla existe en la página.
+// - cada enlace a docs.fiscalapi.com responde 200 y, si lleva ancla, el ancla existe en la página;
+// - lo mismo para los enlaces "Docs:" de las descripciones del OpenAPI público (/api/openapi/v4.json), que
+//   fapi-back escribe a mano y que un título renombrado en fapi-docs rompería sin que nadie lo note.
 // Las skills enlazan las docs en vez de copiarlas (D-03): un enlace roto deja a la skill sin su fuente.
 //
 // Uso: node scripts/check-skills.mjs [carpeta ...]   (por omisión, skills y commands)
 // FISCALAPI_DOCS_ORIGIN=http://localhost:3100 revisa los enlaces contra un build local de fapi-docs, para
 // validar secciones que todavía no están publicadas.
+// FISCALAPI_OPENAPI_URL=<URL o ruta de un .json> lee el OpenAPI de un back local o de un archivo, para
+// validar descripciones que todavía no están en producción.
 // Sale con código 1 si hay algún hallazgo.
 
 import { readdir, readFile, stat } from 'node:fs/promises'
@@ -13,6 +17,8 @@ import path from 'node:path'
 
 const DOCS_ORIGIN = 'https://docs.fiscalapi.com'
 const CHECK_ORIGIN = process.env.FISCALAPI_DOCS_ORIGIN ?? DOCS_ORIGIN
+const OPENAPI_SOURCE = process.env.FISCALAPI_OPENAPI_URL ?? 'https://live.fiscalapi.com/api/openapi/v4.json'
+const HTTP_METHODS = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace']
 const DOCS_URL = /https:\/\/docs\.fiscalapi\.com[^\s)<>"'`\]]*/g
 const SKILL_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/
 const MAX_NAME = 64
@@ -99,6 +105,35 @@ async function linkProblems(url, anchorsCache) {
   return anchors.has(anchor) ? [] : [`${url}: el ancla #${anchor} no existe`]
 }
 
+/** Agrega a `urls` cada enlace a las docs de `text`, recordando dónde aparece (`where`). */
+function collectDocsUrls(text, where, urls) {
+  for (const [url] of (text ?? '').matchAll(DOCS_URL)) {
+    const clean = url.replace(/[.,;:]+$/, '')
+    urls.set(clean, [...(urls.get(clean) ?? []), where])
+  }
+}
+
+async function readOpenApi(source) {
+  if (!/^https?:\/\//.test(source)) return JSON.parse(await readFile(source, 'utf8'))
+  const response = await fetch(source)
+  if (!response.ok) throw new Error(`${source} responde ${response.status}`)
+  return response.json()
+}
+
+/** Los enlaces a las docs de la descripción del documento y de cada operación, por operationId. */
+async function openApiDocsUrls(source) {
+  const document = await readOpenApi(source)
+  const urls = new Map()
+  collectDocsUrls(document.info?.description, 'OpenAPI info.description', urls)
+  for (const [route, item] of Object.entries(document.paths ?? {})) {
+    for (const method of HTTP_METHODS) {
+      const operation = item[method]
+      if (operation) collectDocsUrls(operation.description, `OpenAPI ${operation.operationId ?? `${method} ${route}`}`, urls)
+    }
+  }
+  return urls
+}
+
 async function main() {
   const files = []
   for (const root of roots) if (await exists(root)) files.push(...(await markdownFiles(root)))
@@ -108,18 +143,28 @@ async function main() {
   for (const file of files) {
     const source = await readFile(file, 'utf8')
     if (path.basename(file) === 'SKILL.md') problems.push(...skillProblems(file, source))
-    for (const [url] of source.matchAll(DOCS_URL)) {
-      const clean = url.replace(/[.,;:]+$/, '')
-      if (!urls.has(clean)) urls.set(clean, file)
-    }
+    collectDocsUrls(source, file, urls)
+  }
+  const skillUrlCount = urls.size
+
+  let openApiUrlCount = 0
+  try {
+    const openApiUrls = await openApiDocsUrls(OPENAPI_SOURCE)
+    openApiUrlCount = openApiUrls.size
+    for (const [url, places] of openApiUrls) urls.set(url, [...(urls.get(url) ?? []), ...places])
+  } catch (error) {
+    problems.push(`${OPENAPI_SOURCE}: no se pudo leer el OpenAPI (${error.message})`)
   }
 
   const anchorsCache = new Map()
-  for (const [url, file] of urls) {
-    for (const problem of await linkProblems(url, anchorsCache)) problems.push(`${file}: ${problem}`)
+  for (const [url, places] of urls) {
+    for (const problem of await linkProblems(url, anchorsCache)) problems.push(`${places.join(', ')}: ${problem}`)
   }
 
-  console.log(`${files.length} archivos, ${urls.size} enlaces a ${DOCS_ORIGIN} (revisados en ${CHECK_ORIGIN}), ${problems.length} hallazgos`)
+  console.log(
+    `${files.length} archivos con ${skillUrlCount} enlaces y el OpenAPI (${OPENAPI_SOURCE}) con ${openApiUrlCount}: ` +
+      `${urls.size} enlaces a ${DOCS_ORIGIN} revisados en ${CHECK_ORIGIN}, ${problems.length} hallazgos`,
+  )
   for (const problem of problems) console.log(`- ${problem}`)
   process.exitCode = problems.length > 0 ? 1 : 0
 }

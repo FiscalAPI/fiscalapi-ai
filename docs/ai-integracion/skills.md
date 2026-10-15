@@ -185,4 +185,6 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica). La prueba es el propio check.
 **Fuera de alcance:** las 31 operaciones que todavía no tienen línea "Docs:" (Webhooks, Tickets, Portal, AutoInvoice, Events).
 **Notas:**
-- Hasta que BE-04 y BE-05 lleguen a producción, el OpenAPI de live no trae los enlaces "Docs:" y el check los valida en 0. Por eso la verificación usa el back local.
+- `FISCALAPI_OPENAPI_URL` acepta una URL o la ruta de un `.json`. Contra el OpenAPI del código actual hay 87 enlaces (84 de operaciones y 3 de `info`). Con `FISCALAPI_DOCS_ORIGIN` en el build local de fapi-docs, los 100 enlaces pasan. Un ancla inventada sale con código 1 y nombra la operación (`OpenAPI transferStamps`).
+- Hoy live responde 401 en `/api/openapi/v4.json`, porque BE-03 no está desplegado. Por eso el check de cada PR y cada lunes sale en rojo hasta el deploy de fapi-back. Es a propósito: el plugin y el MCP dependen de ese documento, y saltarlo escondería una regresión.
+- También sale en rojo `errors/pagos-20.md` (SK-03), que es de DOC-02 y aún no está desplegada.
