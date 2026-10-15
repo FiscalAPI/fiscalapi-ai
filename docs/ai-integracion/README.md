@@ -23,6 +23,8 @@ Sigue el ciclo de `fapi-core` (sección 1). Particularidades de este feature:
 - **Restricción dura: cero mantenimiento adicional para FiscalAPI (D-02).** Si una tarea agrega algo que hay que actualizar a mano en paralelo a las docs o al código, está mal planteada.
 - **fiscalapi-ai es público.** Nada llega a `main` sin el PR que fusiona el usuario. Publicar en npm o en los marketplaces es un paso del usuario (U-04).
 - **Todo en español:** skills, descripciones de herramientas del MCP y docs (D-04).
+- **Entorno local:** fapi-back y fapi-docs se trabajan en los worktrees `../fapi-back-ai` y `../fapi-docs-ai` (rama `feat/ai-integracion`, ya con `npm ci` en fapi-docs-ai), para no tocar la rama `feat/localization` de sus working trees principales. fapi-reusables sigue en `feat/auto-invoice` con cambios del usuario: la matriz de DOC-04 está sin rastrear ahí y se versiona en un worktree nuevo desde `main`.
+- **Reanudar:** relee este tablero y vuelve a lanzar `/loop` con el prompt del feature; toma la siguiente fila según `fapi-core`. Nada queda a medias fuera de git.
 
 ## Tablero
 Estado ∈ `pendiente` | `en curso` | `hecho` | `bloqueado`. En `bloqueado`, el motivo o la pregunta va en las Notas de la tarea.
