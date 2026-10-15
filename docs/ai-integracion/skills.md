@@ -1,0 +1,166 @@
+# Integración asistida por IA: skills y plugin
+
+Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-02 a SK-09:
+- **Formato agentskills.io:**
+  - `name` igual al nombre de la carpeta;
+  - `description` de 1024 caracteres como máximo, que diga qué hace la skill, cuándo usarla y cuándo no;
+  - `SKILL.md` en menos de 500 líneas.
+- **D-03:** `references/` solo tiene índices de enlaces a las `.md` (de página o de sección) y árboles de decisión. Nada de payloads, tablas de catálogos ni mensajes de error copiados.
+- **Fuentes permitidas:**
+  - las `.md` de docs.fiscalapi.com;
+  - `/api/openapi/v4.json`;
+  - las herramientas de `@fiscalapi/mcp` (opcionales: la skill funciona sin MCP);
+  - la API de test con la llave del integrador (`GET /api/v4/catalogs/{name}/{search}`, `POST /api/v4/invoices/calculate`).
+- **Reglas de seguridad en todas:** nunca pedir ni escribir una llave live en el código; las llaves van en variables de entorno.
+
+### SK-01 — Armar el esqueleto del repo, los manifiestos y el CI de enlaces
+**Objetivo:** que el repo se instale como plugin en Claude Code, Codex, Cursor y Copilot, y que un enlace roto a las docs haga fallar el CI.
+**Depende de:** —
+**Skills:** `superpowers:writing-skills`, `anthropic-skills:skill-creator`, `plugin-authoring`. El formato de cada manifiesto se toma del repo de referencia que ya lo usa (stripe/ai, dotnet/skills, DevExpress/agent-skills), revisado con `gh api`.
+**Modelo sugerido (opcional):** opus. Fija la estructura de la que dependen todas las tareas.
+**Contexto:** D-03, D-12, RF-04.
+**Alcance:**
+- Estructura: `skills/`, `.claude-plugin/marketplace.json` y `plugin.json`, `.codex-plugin/`, `.cursor-plugin/`, `.github/plugin/`, `LICENSE` y README de instalación con el comando de cada host.
+- CI (GitHub Actions, runner hospedado por GitHub) en cada PR y una vez por semana:
+  - valida el frontmatter contra el estándar;
+  - extrae cada URL de docs.fiscalapi.com de `skills/**`;
+  - exige 200 en cada URL y que cada ancla exista.
+- El MCP **no** se declara en los manifiestos todavía; eso depende de U-04 (D-07).
+**Criterios de aceptación (todos con `→ verificar`):**
+- Se instala en Claude Code desde la ruta local → verificar: `/plugin marketplace add ./` y `/plugin install`; `/plugin` lo muestra.
+- Los manifiestos de Codex, Cursor y Copilot son válidos según el formato de referencia → verificar: diff de estructura contra el repo de referencia, más la instalación local en los hosts disponibles.
+- El CI falla con un ancla rota → verificar: un PR de prueba con un ancla inventada sale en rojo.
+**Pruebas focalizadas:** ninguna (no aplica). La prueba es el CI de enlaces.
+**Fuera de alcance:** el contenido de las skills (SK-02 en adelante).
+**Notas:**
+
+### SK-02 — Escribir `fiscalapi-integracion` y `primer-timbre`
+**Objetivo:** que en un proyecto vacío el agente instale el SDK correcto, configure ambiente y llaves, y logre un UUID en test.
+**Depende de:** SK-01, DOC-01.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules` (para no decir nada falso del CFDI).
+**Modelo sugerido (opcional):** opus. Es la skill más usada y fija el tono de todas.
+**Contexto:** D-01, D-03, D-09, D-10.
+**Alcance:**
+- `fiscalapi-integracion`, con:
+  - tabla de ruteo "qué vas a construir → qué skill y qué `.md` de sección";
+  - ambientes y headers (`X-API-KEY`, `X-TENANT-KEY`, `X-TIME-ZONE`);
+  - elección de SDK según el lenguaje del proyecto;
+  - modo por valores o por referencias;
+  - flujo actual para obtener llaves de test (D-09) y datos de prueba (D-10);
+  - regla crítica: un 5xx o timeout puede significar ya timbrado, así que se consulta el estado antes de reintentar.
+- Comando `primer-timbre`: detecta el lenguaje, instala el SDK, lee las llaves de variables de entorno y timbra una factura de ingreso en test.
+**Criterios de aceptación (todos con `→ verificar`):**
+- En un proyecto Node vacío y en uno .NET vacío, `primer-timbre` produce un UUID en test → verificar: correrlo con una llave de test local y consultar el UUID con `GET /api/v4/invoices/{id}`.
+- La skill se dispara sola con "integra FiscalAPI" → verificar: el log de la sesión de Claude Code muestra la skill cargada.
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica). Lo cubre EV-01.
+**Fuera de alcance:** complementos (SK-04 en adelante).
+**Notas:**
+
+### SK-03 — Escribir `fiscalapi-diagnostico` y `explicar-error`
+**Objetivo:** que ante una respuesta de error el agente distinga una validación de FiscalAPI, un rechazo del PAC o un 5xx, y proponga la corrección leyendo la tabla correcta.
+**Depende de:** SK-01, DOC-02.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** opus.
+**Contexto:** D-03; MED-03 (si ya terminó) para priorizar los códigos.
+**Alcance:**
+- Árbol de decisión:
+  - 400 con `propertyName` → validación;
+  - códigos `CFDI40*`, `CRP*`, `NOM*`, `CCE*`, `CP*` → la `.md` de `/errors/…` que corresponda;
+  - 5xx o timeout → consultar el estado antes de reintentar.
+- Comando `explicar-error <código o respuesta>`.
+**Criterios de aceptación (todos con `→ verificar`):**
+- Con tres respuestas reales de ejemplo (una de cada tipo), `explicar-error` llega a la página y la fila correctas → verificar: transcript de la sesión.
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** guardar o consultar rechazos históricos.
+**Notas:**
+
+### SK-04 — Escribir `fiscalapi-ingreso-egreso`
+**Objetivo:** que el agente arme bien una factura de ingreso, una nota de crédito y una factura global.
+**Depende de:** SK-02, MED-01.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** opus.
+**Contexto:** D-03. El orden de las secciones lo fija MED-01.
+**Alcance:**
+- Decisiones de régimen, uso CFDI, objeto de impuesto, método y forma de pago, factura global y relación de la nota de crédito.
+- Cada decisión enlaza a su sección `.md`.
+- Las claves del SAT se buscan con la API de catálogos de test.
+**Criterios de aceptación (todos con `→ verificar`):**
+- Con los prompts de ingreso, nota de crédito y global, el agente timbra en test → verificar: UUID y estado consultado (caso de EV-01).
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** —
+**Notas:**
+
+### SK-05 — Escribir `fiscalapi-pagos`
+**Objetivo:** que el agente emita un REP 2.0 correcto para facturas PPD y parcialidades.
+**Depende de:** SK-02, MED-01.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** opus.
+**Contexto:** D-03; errores `CRP*` (DOC-02).
+**Alcance:** PUE frente a PPD, saldo anterior e insoluto, parcialidades, tipo de cambio y equivalencia, impuestos del pago; cada punto con su sección `.md`.
+**Criterios de aceptación (todos con `→ verificar`):**
+- El agente timbra en test una factura PPD y su complemento de pago → verificar: los dos UUID y su estado (caso de EV-01).
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** —
+**Notas:**
+
+### SK-06 — Escribir `fiscalapi-ciclo-de-vida` y `revisar-integracion`
+**Objetivo:** que el agente cubra lo que pasa después de timbrar (cancelar, consultar estado, XML y PDF, correo y webhooks) y revise una integración existente.
+**Depende de:** SK-02.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** haiku para el borrador; opus revisa.
+**Contexto:** D-03. `fiscalapi-cli` cubre webhooks en local (`listen`, `trigger`); la skill enlaza a su página de docs.
+**Alcance:**
+- Skill con cancelación (motivos y sustitución), estado ante el SAT, descarga de XML y PDF, envío por correo y verificación de la firma de webhooks.
+- Comando `revisar-integracion`: busca llaves `sk_live_` o llaves en código, falta de `X-TIME-ZONE`, reintentos a ciegas tras un 5xx y webhooks sin verificar la firma.
+**Criterios de aceptación (todos con `→ verificar`):**
+- `revisar-integracion` detecta 4 defectos plantados en un proyecto de prueba → verificar: transcript con los 4 hallazgos.
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** descarga masiva (se evalúa con MED-01 si merece su propia skill).
+**Notas:**
+
+### SK-07 — Escribir `fiscalapi-nomina`
+**Objetivo:** que el agente emita una nómina 1.2 correcta (empleador, empleado, percepciones y deducciones).
+**Depende de:** SK-02, MED-01.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** opus.
+**Contexto:** D-03; errores `NOM*` (página existente).
+**Alcance:** datos de empleador y empleado en la persona, tipos de nómina, percepciones, deducciones, otros pagos e incapacidades; cada punto con su sección `.md`.
+**Criterios de aceptación (todos con `→ verificar`):**
+- El agente timbra en test una nómina ordinaria → verificar: UUID y estado (caso de EV-02).
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** —
+**Notas:**
+
+### SK-08 — Escribir `fiscalapi-carta-porte`
+**Objetivo:** que el agente emita una Carta Porte 3.1 correcta (ubicaciones, mercancías y autotransporte).
+**Depende de:** SK-02, MED-01.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** opus.
+**Contexto:** D-03; errores de Carta Porte (página existente).
+**Alcance:** tipo de CFDI (ingreso o traslado), ubicaciones y distancias, mercancías y material peligroso, autotransporte y figuras; cada punto con su sección `.md` y los catálogos por la API de test.
+**Criterios de aceptación (todos con `→ verificar`):**
+- El agente timbra en test una Carta Porte de traslado por autotransporte → verificar: UUID y estado (caso de EV-02).
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** transporte marítimo, aéreo y ferroviario, salvo que MED-01 diga lo contrario.
+**Notas:**
+
+### SK-09 — Escribir `fiscalapi-comercio-exterior`
+**Objetivo:** que el agente emita un CFDI de exportación con Comercio Exterior 2.0 correcto.
+**Depende de:** SK-02, MED-01.
+**Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
+**Modelo sugerido (opcional):** opus.
+**Contexto:** D-03; errores `CCE*` (DOC-02).
+**Alcance:** clave de pedimento, Incoterm, receptor extranjero (`NumRegIdTrib`), mercancías, fracción arancelaria y tipo de cambio; cada punto con su sección `.md`.
+**Criterios de aceptación (todos con `→ verificar`):**
+- El agente timbra en test una exportación definitiva → verificar: UUID y estado (caso de EV-02).
+- El CI de enlaces pasa → verificar: CI en verde.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** —
+**Notas:**
