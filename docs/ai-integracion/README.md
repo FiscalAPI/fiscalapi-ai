@@ -52,7 +52,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | SK-03 | Escribir `fiscalapi-diagnostico` y `explicar-error` | skills | SK-01, DOC-02 | hecho | fiscalapi-ai@bce6b59 |
 | SK-04 | Escribir `fiscalapi-ingreso-egreso` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@1bcaf7d |
 | SK-05 | Escribir `fiscalapi-pagos` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@557c1f6 |
-| SK-06 | Escribir `fiscalapi-ciclo-de-vida` y `revisar-integracion` | skills | SK-02 | hecho | |
+| SK-06 | Escribir `fiscalapi-ciclo-de-vida` y `revisar-integracion` | skills | SK-02 | hecho | fiscalapi-ai@e5d6690 |
 | SK-07 | Escribir `fiscalapi-nomina` | skills | SK-02, MED-01 | pendiente | |
 | SK-08 | Escribir `fiscalapi-carta-porte` | skills | SK-02, MED-01 | pendiente | |
 | SK-09 | Escribir `fiscalapi-comercio-exterior` | skills | SK-02, MED-01 | pendiente | |
