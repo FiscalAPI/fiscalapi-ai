@@ -70,9 +70,9 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 ### BE-04 — Agregar el trinquete de `EndpointSummary` y cubrir facturas
 **Objetivo:** que ninguna operación pública nueva quede sin resumen, empezando por la ruta crítica del integrador.
 **Depende de:** BE-01.
-**Skills:** `dotnet-aspnetcore:dotnet-webapi`, `dotnet-test:run-tests`.
+**Skills:** `dotnet-aspnetcore:dotnet-webapi`, `dotnet-test:run-tests`, `postman:api-documentation` y `postman:ai-readiness` (para redactar resúmenes y descripciones que contextualicen el OpenAPI generado).
 **Modelo sugerido (opcional):** haiku para escribir los resúmenes; opus revisa la prueba.
-**Contexto:** RF-01. Cada resumen es una línea en español más una `EndpointDescription` con el enlace a la sección de docs. No se ingieren comentarios XML: los `///` son notas internas.
+**Contexto:** RF-01. Cada resumen es una línea en español más una `EndpointDescription` con el enlace a la sección de docs. No se ingieren comentarios XML: los `///` son notas internas. Indicación del usuario (2026-10-14): las descripciones deben usar el vocabulario fiscal con que busca un integrador, para que las consultas que fallaron en la prueba de búsqueda (`requisitos.md` → Contexto medido: "complemento de pago", "crear cliente receptor", "estatus ante el SAT", "descarga masiva") encuentren su operación.
 **Alcance:**
 - Prueba trinquete: lista las operaciones públicas sin `EndpointSummary` y la compara con una lista permitida en el código que solo puede bajar.
 - Resúmenes de Invoices, People y TaxFiles.
@@ -87,9 +87,9 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 ### BE-05 — Completar `EndpointSummary` en el resto de la superficie
 **Objetivo:** que la lista permitida del trinquete quede vacía.
 **Depende de:** BE-04.
-**Skills:** `dotnet-aspnetcore:dotnet-webapi`, `dotnet-test:run-tests`.
+**Skills:** `dotnet-aspnetcore:dotnet-webapi`, `dotnet-test:run-tests`, `postman:api-documentation` y `postman:ai-readiness`.
 **Modelo sugerido (opcional):** haiku.
-**Contexto:** igual que BE-04.
+**Contexto:** igual que BE-04, incluida la indicación del usuario sobre el vocabulario fiscal de las descripciones.
 **Alcance:** resúmenes y descripciones con enlace de Catalogs, Products, Stamps, ApiKeys, DownloadCatalogs, DownloadRequests, DownloadRules, Manifests, SatValidations, Tickets, Portal, AutoInvoice, Webhooks y Events (los que falten); la lista permitida se borra.
 **Textos visibles (propuesta al usuario):** los resúmenes de esta tarea, revisados en el diff.
 **Criterios de aceptación (todos con `→ verificar`):**
