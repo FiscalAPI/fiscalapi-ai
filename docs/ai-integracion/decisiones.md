@@ -126,3 +126,9 @@ Reglas de este archivo:
 - **Por qué:** Codex lee `.claude-plugin/marketplace.json` y `.claude-plugin/plugin.json` (`MARKETPLACE_MANIFEST_RELATIVE_PATHS` y `DISCOVERABLE_PLUGIN_MANIFEST_PATHS` en `openai/codex`), y Copilot los busca en su orden documentado. Un manifiesto por host sería mantenimiento en paralelo (D-02). El campo `skills` se suma al descubrimiento en Claude, lo reemplaza en Cursor y está prohibido en Agent Plugins 1.0.
 - **Consecuencias:** el CI valida con `claude plugin validate . --strict` y exige que la copia de Cursor sea idéntica (`cmp`). El MCP no se declara hasta U-04 (D-07).
 - **Estado:** confirmada (técnica, la fijó SK-01).
+
+### D-19 — Resúmenes OpenAPI con el vocabulario de búsqueda del integrador
+- **Decisión:** el `EndpointSummary` y la `EndpointDescription` de cada operación pública usan los términos con que busca un integrador ("complemento de pago", "cliente receptor", "estatus ante el SAT", "patrón"), aunque el vocabulario interno de fapi-core evite "cliente" para una persona. Cada descripción termina con una línea "Docs:" que enlaza la sección H2 de docs.fiscalapi.com que la documenta.
+- **Por qué:** se buscan para que las consultas que fallaron en la prueba de búsqueda (`requisitos.md`) encuentren su operación, como pidió el usuario el 2026-10-14. El vocabulario interno gobierna el código y la prosa del equipo, no las palabras con que busca un integrador.
+- **Consecuencias:** BE-05 sigue la misma regla. Un texto que afirme un código HTTP o un campo se valida contra el handler.
+- **Estado:** asumida (agente, 2026-10-15). El usuario delegó la aprobación de los textos de BE-04 ("analízalo tú y decide"); revisar con el usuario.

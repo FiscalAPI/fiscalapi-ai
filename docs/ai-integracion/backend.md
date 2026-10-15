@@ -92,7 +92,9 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí (contrato). `--filter "FullyQualifiedName~OpenApi"`.
 **Fuera de alcance:** el resto de controllers (BE-05).
 **Notas:**
-- **Textos visibles**: el usuario aprobó (2026-10-15) redactar los resúmenes de Invoices, People y TaxFiles y mostrarle el diff sin commit; el commit espera su OK sobre ese diff. BE-05 espera a esta tarea.
+- La lista permitida es `OperationsWithoutSummary` en `WebApi.Tests/OpenApi/PublicApiSummaryTests.cs` (41 `operationId`). BE-05 borra filas y al final borra la lista.
+- Las descripciones terminan en una línea "Docs:" que se arma con `PublicApiDocument.DocsUrl` y el ancla H2 real. Antes de usar cada ancla, compruébala contra docs.fiscalapi.com.
+- El usuario delegó la aprobación de los textos (2026-10-15, "analízalo tú y decide"); ver D-19. Que `details` de `getPerson` no tenga efecto quedó en `known-issues.md` de fapi-back.
 
 ### BE-05 — Completar `EndpointSummary` en el resto de la superficie
 **Objetivo:** que la lista permitida del trinquete quede vacía.

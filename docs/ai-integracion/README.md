@@ -40,7 +40,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | BE-01 | Publicar la superficie de 100 acciones con `[PublicApi]` | backend | — | hecho | fapi-back@8d31a9aa |
 | BE-02 | Agregar `operationId` estable y metadatos del documento | backend | BE-01 | hecho | fapi-back@8194141e |
 | BE-03 | Servir `/api/openapi/v4.json` anónimo en test y live | backend | BE-02 | hecho | fapi-back@3ab2a369 |
-| BE-04 | Agregar el trinquete de `EndpointSummary` y cubrir facturas | backend | BE-01 | pendiente | |
+| BE-04 | Agregar el trinquete de `EndpointSummary` y cubrir facturas | backend | BE-01 | hecho | fapi-back@2bd55554 |
 | BE-05 | Completar `EndpointSummary` en el resto de la superficie | backend | BE-04 | pendiente | |
 | DOC-01 | Generar `.md` por sección H2 en el build | docs | — | pendiente | |
 | DOC-02 | Generar la página de errores de Pagos | docs | — | hecho | fapi-docs@816f3a4 |
