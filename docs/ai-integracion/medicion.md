@@ -45,6 +45,8 @@ Los resultados de estas tareas van a `requisitos.md` → **Contexto medido**, co
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** cambiar el onboarding (D-09).
 **Notas:**
+- Dato para D-09: 215 de 378 owners confirmados (56.9 %) nunca hacen la compra de prueba, y nadie timbra sin ella. Línea base: mediana de 1,424 min al primer timbre, 15.4 % en menos de 24 h.
+- "Suscripción" se midió como cualquier fila en `Features` (desde 2026-10-05 casi no hay `Type = 'Base'`). Restore aparte `WebApi_TestSnap` (READ_ONLY), borrado al terminar.
 
 ### MED-03 — Medir el top de rechazos del PAC en Seq
 **Objetivo:** saber qué códigos de rechazo del PAC son los más frecuentes, para dar prioridad a `fiscalapi-diagnostico` y a los casos de las evals.

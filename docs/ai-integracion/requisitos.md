@@ -73,7 +73,55 @@ Fecha de las mediciones: 2026-10-14.
 - Información global es una columna nueva (primer registro 2026-10-10), así que 46 subestima su uso. No hay tabla de Impuestos Locales.
 - **Orden resultante:** ingreso-egreso, pagos, nómina, carta porte y comercio exterior. Pagos va antes que nómina porque la usan 3 veces más tenants (27 contra 9) y el 82 % de la nómina es de un solo tenant. Coincide con el orden de SK-04 a SK-09 y con EV-01 (ingreso y pagos) y EV-02 (nómina, carta porte y comercio exterior), así que el tablero no cambia.
 
-**Sin medir todavía:** el embudo de Test (MED-02) y el top de rechazos del PAC (MED-03).
+**Embudo de Test** (MED-02)
+- Fuente: restore local de Test (`backupset.server_name` = `83f15e2487c3`, corte 2026-10-15 01:00 UTC). Cohortes semanales (lunes) del 2026-04-13 al corte; la última semana está incompleta.
+- Owner = persona con `Id = CreatedBy`. Confirmado = `EmailConfirmed`. Compra de prueba = cualquier fila en `Features` del tenant. Desde 2026-10-05 casi no hay filas `Type = 'Base'` aunque sí compras, así que se cuenta cualquier tipo. Primer timbre = primer `Invoices.CreatedAt` del tenant.
+- **Criterio de exclusión:** personas de sistema (`-1`, `0`, `1`) y correos `@fiscalapi.com`, `@mailinator.com`, `rl-test-*`, los que contienen `test`, `prueba` o `e2e` y el correo del equipo. Quedan 397 de 404 owners.
+- Embudo de las 26 semanas:
+
+  | Paso | Owners | De los owners | Del paso anterior |
+  |---|---|---|---|
+  | Creados | 397 | 100 % | — |
+  | Con correo confirmado | 378 | 95.2 % | 95.2 % |
+  | Con compra de prueba | 164 | 41.3 % | 43.4 % |
+  | Con primer timbre | 121 | 30.5 % | 73.8 % |
+  | Timbran en menos de 24 h | 61 | 15.4 % | 50.4 % |
+
+- Ningún owner timbró sin compra de prueba ni antes de ella: la compra es la puerta del primer timbre. **215 de 378 confirmados (56.9 %) nunca compran.** La mediana a la compra es de 333 min.
+- **Línea base de la métrica norte:** mediana de 1,424 min (23.7 h) de la creación al primer timbre, y 15.4 % de las cuentas nuevas timbra en menos de 24 h.
+- Por cohorte, la mediana va de 87 a 28,730 min. Con 5 a 23 owners por semana, la cifra semanal es ruidosa; se sigue la de 4 semanas móviles.
+
+  | Semana | Owners | Confirmados | Compra | Timbran | < 24 h | Mediana (min) |
+  |---|---|---|---|---|---|---|
+  | 2026-04-13 | 12 | 11 | 4 | 4 | 3 | 618 |
+  | 2026-04-20 | 5 | 5 | 1 | 1 | 0 | 5,958 |
+  | 2026-04-27 | 18 | 18 | 11 | 9 | 2 | 8,706 |
+  | 2026-05-04 | 5 | 5 | 4 | 4 | 3 | 314 |
+  | 2026-05-11 | 10 | 10 | 1 | 0 | 0 | — |
+  | 2026-05-18 | 20 | 19 | 9 | 6 | 4 | 715 |
+  | 2026-05-25 | 14 | 13 | 6 | 3 | 2 | 135 |
+  | 2026-06-01 | 12 | 11 | 3 | 2 | 1 | 3,431 |
+  | 2026-06-08 | 18 | 17 | 9 | 6 | 2 | 9,147 |
+  | 2026-06-15 | 15 | 15 | 4 | 4 | 1 | 28,731 |
+  | 2026-06-22 | 11 | 11 | 8 | 8 | 1 | 15,954 |
+  | 2026-06-29 | 11 | 10 | 4 | 4 | 2 | 3,078 |
+  | 2026-07-06 | 11 | 10 | 3 | 2 | 0 | 15,139 |
+  | 2026-07-13 | 17 | 17 | 7 | 5 | 3 | 798 |
+  | 2026-07-20 | 14 | 14 | 4 | 4 | 2 | 1,281 |
+  | 2026-07-27 | 14 | 14 | 6 | 6 | 4 | 87 |
+  | 2026-08-03 | 23 | 22 | 8 | 7 | 2 | 3,853 |
+  | 2026-08-10 | 15 | 15 | 8 | 6 | 4 | 888 |
+  | 2026-08-17 | 15 | 14 | 8 | 5 | 2 | 2,794 |
+  | 2026-08-24 | 15 | 14 | 8 | 4 | 2 | 727 |
+  | 2026-08-31 | 20 | 16 | 6 | 5 | 3 | 703 |
+  | 2026-09-07 | 18 | 17 | 8 | 4 | 3 | 207 |
+  | 2026-09-14 | 18 | 17 | 9 | 5 | 3 | 1,119 |
+  | 2026-09-21 | 18 | 17 | 7 | 4 | 2 | 3,728 |
+  | 2026-09-28 | 17 | 17 | 7 | 4 | 2 | 1,623 |
+  | 2026-10-05 | 17 | 15 | 6 | 5 | 4 | 249 |
+  | 2026-10-12 (incompleta) | 14 | 14 | 5 | 4 | 4 | 128 |
+
+**Sin medir todavía:** el top de rechazos del PAC (MED-03).
 
 ## Requisitos funcionales
 - **RF-01 — OpenAPI público.** `GET https://{test,live}.fiscalapi.com/api/openapi/v4.json` responde sin autenticación con exactamente las 100 acciones de D-05. Cada operación tiene `operationId` estable y servidores reales.

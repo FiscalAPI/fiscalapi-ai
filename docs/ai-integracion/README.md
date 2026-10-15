@@ -31,8 +31,8 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 
 | ID | Tarea | Área | Depende de | Estado | Commit |
 |---|---|---|---|---|---|
-| MED-01 | Medir mezcla de tipos y complementos en el restore de prod | medicion | — | hecho | fiscalapi-ai (este commit) |
-| MED-02 | Medir embudo y tiempo al primer timbre en el restore de Test | medicion | — | pendiente | |
+| MED-01 | Medir mezcla de tipos y complementos en el restore de prod | medicion | — | hecho | fiscalapi-ai@4f6664c |
+| MED-02 | Medir embudo y tiempo al primer timbre en el restore de Test | medicion | — | hecho | fiscalapi-ai (commit «MED-02») |
 | U-01 | Abrir el túnel a Seq de producción | usuario | — | pendiente | |
 | MED-03 | Medir el top de rechazos del PAC en Seq | medicion | U-01 | pendiente | |
 | BE-01 | Publicar la superficie de 100 acciones con `[PublicApi]` | backend | — | pendiente | |
