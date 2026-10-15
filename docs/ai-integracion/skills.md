@@ -135,6 +135,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** descarga masiva (se evalúa con MED-01 si merece su propia skill).
 **Notas:**
+- `revisar-integracion`, sin skills del usuario, encontró en un proyecto de prueba los 4 defectos plantados: llave `sk_live_` y tenant en `config.js`, falta de `X-TIME-ZONE`, reintento a ciegas tras un 5xx y webhook sin verificar la firma. Agregó otros 2, también reales: URL `live` en el código y `succeeded` sin revisar.
+- El prefijo `sk_live_` sí es de FiscalAPI: `ApiKeyValueGenerator.cs` genera `sk_live_`, `sk_test_` o `sk_development_` más un GUID con guiones bajos. La firma de webhooks es Standard Webhooks (HMAC-SHA256 sobre el cuerpo crudo).
+- Sin resolver: las docs (`webhooks/content.mdx:13`) dicen que sin `X-TIME-ZONE` las fechas de webhooks vienen en UTC con `Z`, pero el middleware usaría `America/Mexico_City`. La skill solo recomienda mandar siempre el header.
 
 ### SK-07 — Escribir `fiscalapi-nomina`
 **Objetivo:** que el agente emita una nómina 1.2 correcta (empleador, empleado, percepciones y deducciones).
