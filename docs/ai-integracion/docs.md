@@ -72,4 +72,6 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** traducir los mensajes del SAT.
 **Notas:**
-- El usuario agregó la matriz 2.0 Rev A (2026-10-15): `fapi-reusables/sat-docs/comercio-exterior/catalogs/Matriz_de_Errores_CCE_v2_0_r_A_76f1e17af8.xls`, sin rastrear en el working tree de fapi-reusables (rama `feat/auto-invoice`); se versiona en `feat/ai-integracion` desde `main`.
+- La matriz 2.0 Rev A quedó versionada en `fapi-reusables@3be8d36` (worktree `fapi-reusables-ai`). La copia sin rastrear del working tree del usuario sigue ahí y no se tocó.
+- La página toma la estructura de `pagos-20` y del generador solo sale la tabla. La columna Aclaraciones vino vacía en las 73 filas, así que la tabla tiene las mismas 6 columnas que Pagos.
+- Matriz y página tienen los mismos 73 códigos CCE, sin diferencias.

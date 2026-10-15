@@ -23,7 +23,7 @@ Sigue el ciclo de `fapi-core` (sección 1). Particularidades de este feature:
 - **Restricción dura: cero mantenimiento adicional para FiscalAPI (D-02).** Si una tarea agrega algo que hay que actualizar a mano en paralelo a las docs o al código, está mal planteada.
 - **fiscalapi-ai es público.** Nada llega a `main` sin el PR que fusiona el usuario. Publicar en npm o en los marketplaces es un paso del usuario (U-04).
 - **Todo en español:** skills, descripciones de herramientas del MCP y docs (D-04).
-- **Entorno local:** fapi-back y fapi-docs se trabajan en los worktrees `../fapi-back-ai` y `../fapi-docs-ai` (rama `feat/ai-integracion`, ya con `npm ci` en fapi-docs-ai), para no tocar la rama `feat/localization` de sus working trees principales. fapi-reusables sigue en `feat/auto-invoice` con cambios del usuario: la matriz de DOC-04 está sin rastrear ahí y se versiona en un worktree nuevo desde `main`.
+- **Entorno local:** fapi-back y fapi-docs se trabajan en los worktrees `../fapi-back-ai` y `../fapi-docs-ai` (rama `feat/ai-integracion`, ya con `npm ci` en fapi-docs-ai), para no tocar la rama `feat/localization` de sus working trees principales. fapi-reusables sigue en `feat/auto-invoice` con cambios del usuario; lo del feature va en el worktree `../fapi-reusables-ai` (rama `feat/ai-integracion` desde `origin/main`). fapi-docs tiene `user.name` local "Fiscalapi": todo commit ahí lleva `-c user.name=mendozagit -c user.email=mendoza.git@gmail.com`.
 - **Reanudar:** relee este tablero y vuelve a lanzar `/loop` con el prompt del feature; toma la siguiente fila según `fapi-core`. Nada queda a medias fuera de git.
 
 ## Tablero
@@ -42,10 +42,10 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | BE-03 | Servir `/api/openapi/v4.json` anónimo en test y live | backend | BE-02 | hecho | fapi-back@3ab2a369 |
 | BE-04 | Agregar el trinquete de `EndpointSummary` y cubrir facturas | backend | BE-01 | hecho | fapi-back@2bd55554 |
 | BE-05 | Completar `EndpointSummary` en el resto de la superficie | backend | BE-04 | hecho | fapi-back@bc22dcec |
-| DOC-01 | Generar `.md` por sección H2 en el build | docs | — | hecho | fapi-docs@68c74c4 |
+| DOC-01 | Generar `.md` por sección H2 en el build | docs | — | hecho | fapi-docs@b97ad82 |
 | DOC-02 | Generar la página de errores de Pagos | docs | — | hecho | fapi-docs@816f3a4 |
 | DOC-03 | Corregir el enlace del SDK de Node en `llms.txt` | docs | — | hecho | fapi-docs@b5eec29 |
-| DOC-04 | Generar la página de errores de Comercio Exterior | docs | — | pendiente | |
+| DOC-04 | Generar la página de errores de Comercio Exterior | docs | — | hecho | fapi-docs@73d326f, fapi-reusables@3be8d36 |
 | SK-01 | Armar el esqueleto del repo, los manifiestos y el CI de enlaces | skills | — | hecho | fiscalapi-ai@6caa2c4 |
 | SK-02 | Escribir `fiscalapi-integracion` y `primer-timbre` | skills | SK-01, DOC-01 | pendiente | |
 | SK-03 | Escribir `fiscalapi-diagnostico` y `explicar-error` | skills | SK-01, DOC-02 | hecho | fiscalapi-ai@bce6b59 |
