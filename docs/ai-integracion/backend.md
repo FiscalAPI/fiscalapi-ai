@@ -73,6 +73,8 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí (exposición). Prueba de integración: la ruta responde sin auth y no expone un documento distinto de `v4`.
 **Fuera de alcance:** importar a Postman (U-03).
 **Notas:**
+- Verificado con el host de pruebas (ambiente Test) y con `curl` contra la app en Development: no se levantó la app local en Test porque ahí se activan los jobs del SAT sobre el restore de prod. "Caché" es output cache del servidor (10 min); la respuesta no lleva `Cache-Control`.
+- Docs con la ruta vieja `/openapi/v4.json` "solo en Development" (prosa, nada lo consume en runtime): `fapi-back/docs/auto-invoice/{backend-emision,portal,release-notes}.md` y `fapi-auto-invoice/CLAUDE.md`.
 
 ### BE-04 — Agregar el trinquete de `EndpointSummary` y cubrir facturas
 **Objetivo:** que ninguna operación pública nueva quede sin resumen, empezando por la ruta crítica del integrador.

@@ -112,7 +112,7 @@ Reglas de este archivo:
 ### D-16 — El OpenAPI se sirve bajo `/api` para no tocar nginx
 - **Decisión:** `MapOpenApi` se mapea a `/api/openapi/{documentName}.json`, anónimo y en todos los ambientes.
 - **Por qué:** el nginx de test y el de live ya mandan `location ^~ /api` al back. El CD no toca nginx, que se cambia a mano (`infra/nginx/live/README.md`). Con otra ruta habría un paso manual.
-- **Consecuencias:** cero cambios en nginx. La ruta hereda el rate limiting de `/api`.
+- **Consecuencias:** cero cambios en nginx. `/api` no tiene `limit_req` en nginx y el limiter de la app solo cubre familias marcadas, así que la ruta no tiene rate limit: el costo lo acota una output cache de una sola entrada (no varía por query, host ni `Authorization`). Corregido en BE-03; antes decía que heredaba el rate limiting de `/api`.
 - **Estado:** confirmada.
 
 ### D-17 — Un solo documento OpenAPI: el público
