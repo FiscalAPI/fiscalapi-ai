@@ -42,7 +42,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | BE-05 | Completar `EndpointSummary` en el resto de la superficie | backend | BE-04 | pendiente | |
 | DOC-01 | Generar `.md` por sección H2 en el build | docs | — | bloqueado | |
 | DOC-02 | Generar la página de errores de Pagos | docs | — | hecho | fapi-docs@816f3a4 |
-| DOC-03 | Corregir el enlace del SDK de Node en `llms.txt` | docs | — | pendiente | |
+| DOC-03 | Corregir el enlace del SDK de Node en `llms.txt` | docs | — | hecho | fapi-docs@b5eec29 |
 | DOC-04 | Generar la página de errores de Comercio Exterior | docs | — | bloqueado | |
 | SK-01 | Armar el esqueleto del repo, los manifiestos y el CI de enlaces | skills | — | pendiente | |
 | SK-02 | Escribir `fiscalapi-integracion` y `primer-timbre` | skills | SK-01, DOC-01 | pendiente | |

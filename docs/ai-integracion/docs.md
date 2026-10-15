@@ -56,6 +56,7 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+- También estaba en `src/components/Libraries.jsx` (la tarjeta del SDK en el sitio). `fiscalapi-js` es el nombre anterior del repo y GitHub redirige; los otros 4 SDK resuelven con su nombre.
 
 ### DOC-04 — Generar la página de errores de Comercio Exterior
 **Objetivo:** que `fiscalapi-diagnostico` y `explicar-error` puedan enlazar los errores `CCE*`, como DOC-02 hizo con los `CRP*`.
