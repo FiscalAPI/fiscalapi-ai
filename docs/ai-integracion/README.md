@@ -36,7 +36,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | U-01 | Abrir el túnel a Seq de producción | usuario | — | pendiente | |
 | MED-03 | Medir el top de rechazos del PAC en Seq | medicion | U-01 | pendiente | |
 | BE-01 | Publicar la superficie de 100 acciones con `[PublicApi]` | backend | — | hecho | fapi-back@8d31a9aa |
-| BE-02 | Agregar `operationId` estable y metadatos del documento | backend | BE-01 | pendiente | |
+| BE-02 | Agregar `operationId` estable y metadatos del documento | backend | BE-01 | bloqueado | |
 | BE-03 | Servir `/api/openapi/v4.json` anónimo en test y live | backend | BE-02 | pendiente | |
 | BE-04 | Agregar el trinquete de `EndpointSummary` y cubrir facturas | backend | BE-01 | pendiente | |
 | BE-05 | Completar `EndpointSummary` en el resto de la superficie | backend | BE-04 | pendiente | |

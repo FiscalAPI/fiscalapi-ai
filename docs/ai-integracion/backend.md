@@ -52,6 +52,8 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí (contrato). `--filter "FullyQualifiedName~OpenApi"`.
 **Fuera de alcance:** resúmenes por operación (BE-04 y BE-05).
 **Notas:**
+- Bloqueada por **Textos visibles**: ¿apruebas este `info` del documento público? Propuesta: `title` "Fiscalapi API", `version` "4.0" y como `description` el texto del spec de Postman (párrafo de la API, "Modos de operación" y los enlaces a credenciales y datos de prueba) sin la sección "Configura un environment", que es solo de la colección, y con una línea nueva: "Ambientes: `https://test.fiscalapi.com` (pruebas) y `https://live.fiscalapi.com` (producción)".
+- La fuente (`postman/specs/Fiscalapi Specification`) solo existe sin rastrear en el working tree `fapi-back`, no en `main`: el texto aprobado se copia al transformer.
 
 ### BE-03 — Servir `/api/openapi/v4.json` anónimo en test y live
 **Objetivo:** que cualquier agente o herramienta descargue el contrato sin credenciales y sin tocar nginx.
