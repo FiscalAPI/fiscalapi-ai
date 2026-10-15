@@ -67,7 +67,7 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Depende de:** SK-01, DOC-02.
 **Skills:** `superpowers:writing-skills`, `fapi-cfdi-rules`.
 **Modelo sugerido (opcional):** opus.
-**Contexto:** D-03; MED-03 (si ya terminó) para priorizar los códigos.
+**Contexto:** D-03. El top de rechazos del PAC (MED-03) quedó fuera de alcance (D-20).
 **Alcance:**
 - Árbol de decisión:
   - 400 con `propertyName` → validación;

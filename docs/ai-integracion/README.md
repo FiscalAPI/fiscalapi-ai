@@ -15,7 +15,7 @@ Para eso el feature publica:
 
 **Ramas:** `feat/ai-integracion` en cada repo que toque (fiscalapi-ai, fapi-back, fapi-docs, fapi-reusables), siempre desde `main`.
 
-**Fuera de alcance:** MCP hosteado, sandbox sin "compra" y CSD de prueba propios. Ver `requisitos.md`.
+**Fuera de alcance:** MCP hosteado, sandbox sin "compra", CSD de prueba propios y el top de rechazos del PAC en Seq (MED-03, D-20). Ver `requisitos.md`.
 
 ## Cómo trabajar
 Sigue el ciclo de `fapi-core` (sección 1). Particularidades de este feature:
@@ -35,8 +35,6 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 |---|---|---|---|---|---|
 | MED-01 | Medir mezcla de tipos y complementos en el restore de prod | medicion | — | hecho | fiscalapi-ai@4f6664c |
 | MED-02 | Medir embudo y tiempo al primer timbre en el restore de Test | medicion | — | hecho | fiscalapi-ai@a5f9586 |
-| U-01 | Abrir el túnel a Seq de producción | usuario | — | pendiente | |
-| MED-03 | Medir el top de rechazos del PAC en Seq | medicion | U-01 | pendiente | |
 | BE-01 | Publicar la superficie de 100 acciones con `[PublicApi]` | backend | — | hecho | fapi-back@8d31a9aa |
 | BE-02 | Agregar `operationId` estable y metadatos del documento | backend | BE-01 | hecho | fapi-back@8194141e |
 | BE-03 | Servir `/api/openapi/v4.json` anónimo en test y live | backend | BE-02 | hecho | fapi-back@3ab2a369 |
@@ -55,7 +53,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | SK-06 | Escribir `fiscalapi-ciclo-de-vida` y `revisar-integracion` | skills | SK-02 | hecho | fiscalapi-ai@e5d6690 |
 | SK-07 | Escribir `fiscalapi-nomina` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@51cbb20 |
 | SK-08 | Escribir `fiscalapi-carta-porte` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@9849def |
-| SK-09 | Escribir `fiscalapi-comercio-exterior` | skills | SK-02, MED-01 | pendiente | |
+| SK-09 | Escribir `fiscalapi-comercio-exterior` | skills | SK-02, MED-01 | en curso | |
 | MCP-01 | Crear el paquete stdio con `listar_operaciones` y `obtener_operacion` | mcp | SK-01, BE-03 | pendiente | |
 | MCP-02 | Agregar `buscar_docs` con índice en español | mcp | MCP-01, DOC-01 | pendiente | |
 | EV-01 | Montar el harness de evals con los casos de ingreso y pagos | evals | SK-05, MCP-02 | pendiente | |

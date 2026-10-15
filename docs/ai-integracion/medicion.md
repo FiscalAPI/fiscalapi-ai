@@ -49,6 +49,7 @@ Los resultados de estas tareas van a `requisitos.md` → **Contexto medido**, co
 - "Suscripción" se midió como cualquier fila en `Features` (desde 2026-10-05 casi no hay `Type = 'Base'`). Restore aparte `WebApi_TestSnap` (READ_ONLY), borrado al terminar.
 
 ### MED-03 — Medir el top de rechazos del PAC en Seq
+**Estado:** fuera de alcance por decisión del usuario (D-20); se quitó del tablero junto con U-01.
 **Objetivo:** saber qué códigos de rechazo del PAC son los más frecuentes, para dar prioridad a `fiscalapi-diagnostico` y a los casos de las evals.
 **Depende de:** U-01 (el usuario abre el túnel a Seq de producción).
 **Skills:** `fapi-investigate`.

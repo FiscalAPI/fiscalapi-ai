@@ -121,7 +121,7 @@ Fecha de las mediciones: 2026-10-14.
   | 2026-10-05 | 17 | 15 | 6 | 5 | 4 | 249 |
   | 2026-10-12 (incompleta) | 14 | 14 | 5 | 4 | 4 | 128 |
 
-**Sin medir todavía:** el top de rechazos del PAC (MED-03).
+**Fuera de alcance:** el top de rechazos del PAC (MED-03), por decisión del usuario (D-20).
 
 ## Requisitos funcionales
 - **RF-01 — OpenAPI público.** `GET https://{test,live}.fiscalapi.com/api/openapi/v4.json` responde sin autenticación con exactamente las 100 acciones de D-05. Cada operación tiene `operationId` estable y servidores reales.

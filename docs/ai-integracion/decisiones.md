@@ -132,3 +132,9 @@ Reglas de este archivo:
 - **Por qué:** se buscan para que las consultas que fallaron en la prueba de búsqueda (`requisitos.md`) encuentren su operación, como pidió el usuario el 2026-10-14. El vocabulario interno gobierna el código y la prosa del equipo, no las palabras con que busca un integrador.
 - **Consecuencias:** BE-05 sigue la misma regla. Un texto que afirme un código HTTP o un campo se valida contra el handler.
 - **Estado:** asumida (agente, 2026-10-15). El usuario delegó la aprobación de los textos de BE-04 ("analízalo tú y decide"); revisar con el usuario.
+
+### D-20 — El top de rechazos del PAC queda fuera de alcance
+- **Decisión:** no se mide el top de rechazos del PAC en el Seq de producción (MED-03), y no se abre el túnel a Seq (U-01). Las dos filas salen del tablero.
+- **Por qué:** lo decidió el usuario el 2026-10-15. Las skills ya están escritas sin ese dato, y ninguna otra tarea depende de MED-03.
+- **Consecuencias:** EV-01 usa un código representativo de cada matriz (`CFDI40`, `CRP`, `NOM`, `CP`, `CCE`) para los casos de "explicar error". `fiscalapi-diagnostico` cubre todas las familias, aunque sin ordenarlas por frecuencia real.
+- **Estado:** confirmada.

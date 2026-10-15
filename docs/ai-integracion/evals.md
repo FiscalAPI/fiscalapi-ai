@@ -29,10 +29,10 @@ Todo va en fiscalapi-ai, en `evals/`, en la rama `feat/ai-integracion`. Las eval
 **Depende de:** EV-01, SK-09.
 **Skills:** `fapi-cfdi-rules`.
 **Modelo sugerido (opcional):** haiku para escribir los casos; opus revisa la calificación.
-**Contexto:** D-03; el orden y los casos extra los fija MED-01 y el top de rechazos de MED-03.
+**Contexto:** D-03; el orden y los casos extra los fija MED-01; los códigos de "explicar error" son representativos de las matrices (D-20).
 **Alcance:**
 - Casos de nómina ordinaria, Carta Porte de traslado por autotransporte y exportación definitiva con Comercio Exterior.
-- Un caso de "explicar error" por cada código del top 5 de MED-03.
+- Un caso de "explicar error" por familia de código: `CFDI40`, `CRP`, `NOM`, `CP` y `CCE`, uno representativo de su matriz en las docs.
 **Criterios de aceptación (todos con `→ verificar`):**
 - Los casos nuevos corren en las 3 variantes → verificar: reporte con las filas nuevas.
 **Pruebas focalizadas:** ninguna (no aplica).
