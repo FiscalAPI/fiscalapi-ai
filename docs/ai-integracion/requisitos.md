@@ -55,7 +55,25 @@ Fecha de las mediciones: 2026-10-14.
 - Node 20 ya no tiene soporte.
 - npm trusted publishing exige un runner hospedado por GitHub.
 
-**Sin medir todavía:** la mezcla de tipos y complementos (MED-01), el embudo de Test (MED-02) y el top de rechazos del PAC (MED-03).
+**Mezcla de tipos y complementos** (MED-01)
+- Fuente: restore local de producción (`backupset.server_name` = `649fafb1cc93`, corte 2026-10-15 01:00 UTC), facturas con `CreatedAt` del 2025-10-15 al corte. Todas tienen `Uuid`: 60,179 timbres de 100 tenants.
+- Volumen y tenants:
+
+  | Tipo o complemento | Facturas | Tenants | Tenant mayor | Skill |
+  |---|---|---|---|---|
+  | Ingreso (`I`), sin Carta Porte | 38,828 | 97 (con `E`) | 41.5 % de `I` | SK-04 |
+  | Egreso (`E`) | 252 | 9 | 37.3 % | SK-04 |
+  | Pagos (`P`, fila en `InvoicePayments`) | 6,441 | 27 | 65.7 % | SK-05 |
+  | Nómina (`N`, fila en `Payrolls`) | 14,481 | 9 | 82.3 % | SK-07 |
+  | Carta Porte (`I` con fila en `CartaPortes`) | 177 | 2 | — | SK-08 |
+  | Comercio Exterior (`ComercioExteriores`) | 0 (0 desde siempre) | 0 | — | SK-09 |
+  | Información global (`Invoices.GlobalInformation_*`) | 46 | 11 | — | SK-04 |
+
+- Por mes, `I` crece de 51 (2025-10) a 10,263 (2026-09); `P` de 2 a 2,112; `N` sube a 4,636 en 2026-09. Carta Porte aparece en 2026-07 (14 a 75 al mes).
+- Información global es una columna nueva (primer registro 2026-10-10), así que 46 subestima su uso. No hay tabla de Impuestos Locales.
+- **Orden resultante:** ingreso-egreso, pagos, nómina, carta porte y comercio exterior. Pagos va antes que nómina porque la usan 3 veces más tenants (27 contra 9) y el 82 % de la nómina es de un solo tenant. Coincide con el orden de SK-04 a SK-09 y con EV-01 (ingreso y pagos) y EV-02 (nómina, carta porte y comercio exterior), así que el tablero no cambia.
+
+**Sin medir todavía:** el embudo de Test (MED-02) y el top de rechazos del PAC (MED-03).
 
 ## Requisitos funcionales
 - **RF-01 — OpenAPI público.** `GET https://{test,live}.fiscalapi.com/api/openapi/v4.json` responde sin autenticación con exactamente las 100 acciones de D-05. Cada operación tiene `operationId` estable y servidores reales.

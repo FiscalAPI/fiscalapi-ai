@@ -20,6 +20,8 @@ Los resultados de estas tareas van a `requisitos.md` → **Contexto medido**, co
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** errores del PAC (MED-03); embudo de Test (MED-02).
 **Notas:**
+- Hechos corregidos: Nómina y Pagos viven en `Payrolls` e `InvoicePayments` (1:1 por índice único en `InvoiceId`); Información global no es tabla sino columnas `Invoices.GlobalInformation_*`.
+- Restore aparte `WebApi_ProdSnap_20261014` (READ_ONLY), borrado al terminar. Comercio Exterior: 0 facturas desde siempre; el orden de skills no cambia.
 
 ### MED-02 — Medir embudo y tiempo al primer timbre en el restore de Test
 **Objetivo:** fijar la línea base de la métrica norte y medir cuántas cuentas abandonan en el paso de compra de prueba (para revisar D-09).
