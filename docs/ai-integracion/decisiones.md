@@ -88,10 +88,10 @@ Reglas de este archivo:
 - **Estado:** confirmada.
 
 ### D-13 — `operationId` estable por acción pública
-- **Decisión:** cada acción con `[PublicApi]` declara un `operationId` estable, en camelCase y en inglés como el código (por ejemplo `createInvoice`). Se fija con el mecanismo de nombre de endpoint de ASP.NET Core 10, verificado en la documentación oficial.
+- **Decisión:** cada acción con `[PublicApi]` declara un `operationId` estable, en camelCase y en inglés como el código. Va como argumento obligatorio del mismo atributo (`[PublicApi("createInvoice")]`), que implementa `IEndpointNameMetadata`: el generador de ASP.NET Core 10 toma el operationId del nombre de ruta o, si no hay, de ese metadato (`OpenApiDocumentService.GetOperationId`, release/10.0). Convención: `list<Recurso>` para colecciones, `get` / `create` / `update` / `delete<Recurso>` para el CRUD y el verbo del dominio cuando lo hay (`cancelInvoice`, `revokeApiKey`, `cancelTicket`, `transferStamps`, `runSatValidations`).
 - **Por qué:** el MCP y las skills lo usan como id. El spec de Postman no trae ninguno.
 - **Consecuencias:** cambiar un `operationId` es un cambio visible para los consumidores del OpenAPI.
-- **Estado:** técnica — la fija BE-02.
+- **Estado:** confirmada (técnica, la fijó BE-02).
 
 ### D-14 — Paquete `@fiscalapi/mcp`, publicado por CI cuando cambia el hash
 - **Decisión:**

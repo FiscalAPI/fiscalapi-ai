@@ -54,6 +54,8 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Notas:**
 - **Textos visibles** aprobados por el usuario (2026-10-15): `title` "Fiscalapi API", `version` "4.0" y como `description` el texto del spec de Postman (párrafo de la API, "Modos de operación" y los enlaces a credenciales y datos de prueba) sin la sección "Configura un environment", más la línea "Ambientes: `https://test.fiscalapi.com` (pruebas) y `https://live.fiscalapi.com` (producción)".
 - La fuente (`postman/specs/Fiscalapi Specification`) solo existe sin rastrear en el working tree `fapi-back`, no en `main`: el texto aprobado se copia al transformer.
+- Hecho: el operationId va en `[PublicApi("…")]` (D-13). `X-TIME-ZONE` lleva una descripción redactada desde `TimezoneMiddleware` (texto visible asumido; se revisa con BE-04). Redocly 2.57.0: válido salvo `operation-summary` (BE-04/05).
+- Pendiente opcional: ninguna prueba fija los 100 nombres; renombrar uno no falla. La descripción aprobada dice que toda petición usa los dos headers, pero el portal es anónimo.
 
 ### BE-03 — Servir `/api/openapi/v4.json` anónimo en test y live
 **Objetivo:** que cualquier agente o herramienta descargue el contrato sin credenciales y sin tocar nginx.
