@@ -168,3 +168,21 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+
+### SK-10 — Validar en el check semanal los enlaces "Docs:" del OpenAPI
+**Objetivo:** que un título renombrado o retirado en fapi-docs no deje rotos, sin que nadie lo note, los enlaces "Docs:" de las descripciones del OpenAPI público.
+**Depende de:** SK-01, BE-05.
+**Skills:** ninguna de dominio. Se extiende `scripts/check-skills.mjs` de SK-01.
+**Modelo sugerido (opcional):** haiku. Reutiliza el validador de enlaces que ya existe.
+**Contexto:** D-02, RF-01. BE-04 y BE-05 escribieron a mano 84 enlaces a anclas H2 de docs.fiscalapi.com en las `EndpointDescription` de fapi-back, y solo se verificaron una vez. El check de SK-01 corre en cada PR y cada lunes, pero solo lee `skills/**`.
+**Alcance:**
+- El check también descarga `/api/openapi/v4.json`: de live por omisión, o de la URL de `FISCALAPI_OPENAPI_URL` para validar contra un back local. Extrae cada URL de docs.fiscalapi.com que aparece en `info.description` y en las `description` de cada operación.
+- Esas URL se validan con la misma regla que las de las skills: 200 y ancla existente, contra `FISCALAPI_DOCS_ORIGIN` cuando está definido. Cada hallazgo indica el `operationId` donde está el enlace roto.
+- Corre en el mismo job `Check`, sin un workflow nuevo.
+**Criterios de aceptación (todos con `→ verificar`):**
+- Los 84 enlaces del OpenAPI se validan y pasan → verificar: `FISCALAPI_OPENAPI_URL` apuntando al back local de `fapi-back-ai` y `node scripts/check-skills.mjs`, con el conteo de enlaces del OpenAPI en la salida.
+- Un ancla rota en una descripción hace fallar el check y nombra la operación → verificar: un OpenAPI de prueba con un ancla inventada sale con código 1 y el `operationId` en el mensaje.
+**Pruebas focalizadas:** ninguna (no aplica). La prueba es el propio check.
+**Fuera de alcance:** las 31 operaciones que todavía no tienen línea "Docs:" (Webhooks, Tickets, Portal, AutoInvoice, Events).
+**Notas:**
+- Hasta que BE-04 y BE-05 lleguen a producción, el OpenAPI de live no trae los enlaces "Docs:" y el check los valida en 0. Por eso la verificación usa el back local.
