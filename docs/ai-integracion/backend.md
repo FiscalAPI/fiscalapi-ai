@@ -110,3 +110,6 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** las mismas de BE-04.
 **Fuera de alcance:** —
 **Notas:**
+- Ya no hay operaciones sin resumen (41 → 0) y `PublicApiSummaryTests` lo exige sin lista. Los textos los decidió el agente por delegación del usuario (D-19). Las 31 operaciones que ya tenían resumen (Webhooks, Tickets, Portal, AutoInvoice, Events) siguen sin enlace "Docs:".
+- En Test (`FakeResults=true`), `runSatValidations` simula todos los tipos, aunque el comentario de `RunSatValidationsCommand.cs:161` diga que solo `sat.cfdi.status`.
+- Dos defectos nuevos quedaron en `known-issues.md` de fapi-back, los dos de descarga masiva: el SAT puede no aceptar una solicitud y aun así se guarda, y crear o borrar solicitudes solo exige `XmlDownloader.Read`.
