@@ -54,7 +54,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | SK-05 | Escribir `fiscalapi-pagos` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@557c1f6 |
 | SK-06 | Escribir `fiscalapi-ciclo-de-vida` y `revisar-integracion` | skills | SK-02 | hecho | fiscalapi-ai@e5d6690 |
 | SK-07 | Escribir `fiscalapi-nomina` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@51cbb20 |
-| SK-08 | Escribir `fiscalapi-carta-porte` | skills | SK-02, MED-01 | hecho | |
+| SK-08 | Escribir `fiscalapi-carta-porte` | skills | SK-02, MED-01 | hecho | fiscalapi-ai@9849def |
 | SK-09 | Escribir `fiscalapi-comercio-exterior` | skills | SK-02, MED-01 | pendiente | |
 | MCP-01 | Crear el paquete stdio con `listar_operaciones` y `obtener_operacion` | mcp | SK-01, BE-03 | pendiente | |
 | MCP-02 | Agregar `buscar_docs` con índice en español | mcp | MCP-01, DOC-01 | pendiente | |
