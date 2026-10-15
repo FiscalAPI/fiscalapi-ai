@@ -88,6 +88,7 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí (contrato). `--filter "FullyQualifiedName~OpenApi"`.
 **Fuera de alcance:** el resto de controllers (BE-05).
 **Notas:**
+- Bloqueada por **Textos visibles**: los resúmenes de Invoices, People y TaxFiles se te muestran en el diff antes del commit. ¿Los redacto y te muestro el diff (sin commit) en cuanto me lo indiques? BE-05 espera a esta tarea.
 
 ### BE-05 — Completar `EndpointSummary` en el resto de la superficie
 **Objetivo:** que la lista permitida del trinquete quede vacía.
