@@ -22,7 +22,7 @@ Todo va en fiscalapi-ai, en `evals/`, en la rama `feat/ai-integracion`. Las eval
 - Un caso con una skill rota a propósito baja su tasa de éxito → verificar: corrida con un enlace o una regla falsa plantada.
 **Pruebas focalizadas:** ninguna (no aplica). El harness es la prueba.
 **Fuera de alcance:** correr en CI (D-11).
-**Notas:**
+**Notas:** pausada el 2026-10-15 por el usuario antes de empezar: sin código ni decisiones. Al retomar, D-11 sigue sin fijar el runner. MCP-02 quedó en `fiscalapi-ai@3594080`, y las docs locales de verificación se sirven con `npx next start -p 3999` en fapi-docs-ai.
 
 ### EV-02 — Agregar casos de nómina, carta porte y comercio exterior
 **Objetivo:** cubrir con evals todos los casos CFDI del feature.
