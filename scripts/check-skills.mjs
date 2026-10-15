@@ -4,12 +4,15 @@
 // Las skills enlazan las docs en vez de copiarlas (D-03): un enlace roto deja a la skill sin su fuente.
 //
 // Uso: node scripts/check-skills.mjs [carpeta ...]   (por omisión, skills y commands)
+// FISCALAPI_DOCS_ORIGIN=http://localhost:3100 revisa los enlaces contra un build local de fapi-docs, para
+// validar secciones que todavía no están publicadas.
 // Sale con código 1 si hay algún hallazgo.
 
 import { readdir, readFile, stat } from 'node:fs/promises'
 import path from 'node:path'
 
 const DOCS_ORIGIN = 'https://docs.fiscalapi.com'
+const CHECK_ORIGIN = process.env.FISCALAPI_DOCS_ORIGIN ?? DOCS_ORIGIN
 const DOCS_URL = /https:\/\/docs\.fiscalapi\.com[^\s)<>"'`\]]*/g
 const SKILL_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/
 const MAX_NAME = 64
@@ -70,13 +73,13 @@ function skillProblems(file, source) {
   return problems
 }
 
-/** Los `id` de la página HTML: las anclas que genera el sitio para cada encabezado. */
+/** Las anclas de la página HTML: el `id` que el sitio genera para cada H2 y los `<a name>` explícitos. */
 async function pageAnchors(pageUrl, cache) {
   if (!cache.has(pageUrl)) {
     cache.set(
       pageUrl,
       fetch(pageUrl).then(async (response) =>
-        response.ok ? new Set([...(await response.text()).matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])) : null,
+        response.ok ? new Set([...(await response.text()).matchAll(/\s(?:id|name)="([^"]+)"/g)].map((m) => m[1])) : null,
       ),
     )
   }
@@ -84,7 +87,8 @@ async function pageAnchors(pageUrl, cache) {
 }
 
 async function linkProblems(url, anchorsCache) {
-  const [address, anchor] = url.split('#')
+  const [published, anchor] = url.split('#')
+  const address = published.replace(DOCS_ORIGIN, CHECK_ORIGIN)
   const response = await fetch(address, { method: 'GET', redirect: 'manual' })
   if (response.status !== 200) return [`${url}: responde ${response.status}`]
   if (!anchor) return []
@@ -115,7 +119,7 @@ async function main() {
     for (const problem of await linkProblems(url, anchorsCache)) problems.push(`${file}: ${problem}`)
   }
 
-  console.log(`${files.length} archivos, ${urls.size} enlaces a ${DOCS_ORIGIN}, ${problems.length} hallazgos`)
+  console.log(`${files.length} archivos, ${urls.size} enlaces a ${DOCS_ORIGIN} (revisados en ${CHECK_ORIGIN}), ${problems.length} hallazgos`)
   for (const problem of problems) console.log(`- ${problem}`)
   process.exitCode = problems.length > 0 ? 1 : 0
 }

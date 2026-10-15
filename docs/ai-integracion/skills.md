@@ -77,6 +77,8 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** guardar o consultar rechazos históricos.
 **Notas:**
+- Contrato verificado en fapi-back: un rechazo del PAC responde el status del PAC con `message` = `"CÓDIGO - texto"`, `details` = detalle del PAC y `data` = null (`InvoiceIssuanceTests`, `PacRejectionCodeTests`). Las respuestas de prueba se armaron con ese contrato y la fila real CFDI40147, sin timbrar contra el PAC. `claude -p /fiscalapi:explicar-error` llegó a la página y la fila correctas en los 3 casos.
+- `errors/pagos-20` aún no está publicada: el CI sale en rojo hasta desplegar fapi-docs (DOC-02). Contra el build local pasa (`FISCALAPI_DOCS_ORIGIN=http://localhost:3100`). Sin tabla de `CCE` (DOC-04), la skill usa el texto del rechazo. Solo los H2 tienen ancla en el sitio.
 
 ### SK-04 — Escribir `fiscalapi-ingreso-egreso`
 **Objetivo:** que el agente arme bien una factura de ingreso, una nota de crédito y una factura global.
