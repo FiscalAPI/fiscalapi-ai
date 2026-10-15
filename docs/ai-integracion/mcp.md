@@ -58,7 +58,9 @@ Antes de escribir código contra el SDK de MCP, se consulta su documentación vi
 - El paquete completo pesa menos de 5 MB → verificar: `npm pack --dry-run`.
 **Pruebas focalizadas:** sí. `npm test` en `mcp/`.
 **Fuera de alcance:** embeddings (D-08).
-**Notas:**
+**Notas:** regresión 15/16 en el top 3, con las 16 consultas recuperadas de la sesión de planeación; caso conocido "buscar clave de producto sat" (sale primero la página "Catálogos SAT"). "lista negra 69b" ya pasa, y "estatus ante el sat" acepta `sat-validations/validar` (criterio `sat.cfdi.status`); ambas se asumieron y quedan documentadas en `test/search-regression.test.ts`.
+Sin prefijo, porque "sat" coincidía con cada `SatXxx` de los catálogos de Carta Porte; fuzzy solo para términos de 5 letras o más. El extracto se ancla en la primera coincidencia exacta, así "CFDI40147" muestra su fila de la tabla. Paquete de 342.5 kB (1.8 MB desempaquetado) y arranque de 0.6 s.
+El fixture `docs-corpus.json.gz` sale del build local de fapi-docs@73d326f, porque live todavía da 404 en las `.md` por sección. Después del deploy se regenera con `scripts/snapshot-docs.mjs`, y MCP-03 genera `data/` desde docs.fiscalapi.com.
 
 ### MCP-03 — Agregar el workflow de build y publicación por hash
 **Objetivo:** que el paquete se regenere solo cuando cambian el OpenAPI o las docs, sin que nadie lo mantenga.

@@ -3,6 +3,7 @@ import type { CallToolResult } from '@modelcontextprotocol/client';
 import { inject } from 'vitest';
 
 import { OperationCatalog } from '../src/catalog.js';
+import { DocsIndex } from '../src/docs.js';
 import { createServer } from '../src/server.js';
 
 export function dataDirUrl(): URL {
@@ -11,7 +12,7 @@ export function dataDirUrl(): URL {
 
 /** Cliente MCP en proceso conectado al servidor por el transporte en memoria del SDK. */
 export async function connectClient(): Promise<{ client: Client; close: () => Promise<void> }> {
-  const server = createServer(OperationCatalog.load(dataDirUrl()), '0.0.0-test');
+  const server = createServer(OperationCatalog.load(dataDirUrl()), DocsIndex.load(dataDirUrl()), '0.0.0-test');
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   const client = new Client({ name: 'fiscalapi-mcp-test', version: '1.0.0' });
   await server.connect(serverTransport);

@@ -1,7 +1,7 @@
 {
   "name": "@fiscalapi/mcp",
   "version": "0.1.0",
-  "description": "Servidor MCP de solo lectura con el catálogo de operaciones de la API de FiscalAPI (CFDI 4.0)",
+  "description": "Servidor MCP de solo lectura con el catálogo de operaciones de la API de FiscalAPI (CFDI 4.0) y una búsqueda en su documentación",
   "type": "module",
   "bin": {
     "fiscalapi-mcp": "dist/index.js"
@@ -43,6 +43,9 @@
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.3.1",
+    "@orama/stemmers": "3.1.18",
+    "@orama/stopwords": "3.1.18",
+    "minisearch": "7.2.0",
     "zod": "4.6.7"
   },
   "devDependencies": {

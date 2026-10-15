@@ -3,14 +3,18 @@ import type { CallToolResult } from '@modelcontextprotocol/server';
 import * as z from 'zod/v4';
 
 import type { CatalogEntry, OperationCatalog } from './catalog.js';
+import type { DocsIndex, DocsResult } from './docs.js';
 
 export const SERVER_NAME = 'fiscalapi';
 
-// Las dos herramientas solo leen archivos del paquete: no llaman a la API ni a ningún otro servicio.
+// Las herramientas solo leen archivos del paquete: no llaman a la API ni a ningún otro servicio.
 const READ_ONLY = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false } as const;
 const MAX_ECHOED_INPUT = 100;
+const MAX_QUERY_CHARS = 200;
+const MAX_DOCS_RESULTS = 10;
+const DEFAULT_DOCS_RESULTS = 5;
 
-export function createServer(catalog: OperationCatalog, version: string): McpServer {
+export function createServer(catalog: OperationCatalog, docs: DocsIndex, version: string): McpServer {
   const server = new McpServer({ name: SERVER_NAME, version });
 
   server.registerTool(
@@ -49,6 +53,31 @@ export function createServer(catalog: OperationCatalog, version: string): McpSer
     async ({ operationId }) => getOperation(catalog, operationId),
   );
 
+  server.registerTool(
+    'buscar_docs',
+    {
+      title: 'Buscar en la documentación de FiscalAPI',
+      description:
+        'Busca en las secciones de docs.fiscalapi.com: guías, reglas fiscales del SAT, catálogos, errores del PAC por código (como CFDI40147) y la referencia de cada endpoint. Devuelve de cada resultado el título, la página, la URL .md de la sección y un extracto; para leer la sección completa, descarga esa URL. No llama a la API ni pide llaves.',
+      inputSchema: z.object({
+        consulta: z
+          .string()
+          .min(1)
+          .max(MAX_QUERY_CHARS)
+          .describe('Qué buscar, en español o por código (por ejemplo "cancelar factura", "complemento de pago" o "CFDI40147").'),
+        limite: z
+          .number()
+          .int()
+          .min(1)
+          .max(MAX_DOCS_RESULTS)
+          .optional()
+          .describe(`Número máximo de resultados, de 1 a ${MAX_DOCS_RESULTS}. Por omisión ${DEFAULT_DOCS_RESULTS}.`),
+      }),
+      annotations: READ_ONLY,
+    },
+    async ({ consulta, limite }) => searchDocs(docs, consulta, limite ?? DEFAULT_DOCS_RESULTS),
+  );
+
   return server;
 }
 
@@ -70,6 +99,30 @@ async function getOperation(catalog: OperationCatalog, operationId: string): Pro
   const suggestions = catalog.suggest(operationId);
   const hint = suggestions.length > 0 ? `¿Quisiste decir ${suggestions.join(', ')}? ` : '';
   return error(`No existe la operación "${operationId}". ${hint}Usa listar_operaciones para ver los operationId disponibles.`);
+}
+
+function searchDocs(docs: DocsIndex, query: string, limit: number): CallToolResult {
+  const results = docs.search(query, limit);
+  const echoed = clip(query);
+  // Sin resultados no es un error de la llamada: el agente debe reformular, no reintentar igual.
+  if (results.length === 0) {
+    return text(
+      `FiscalAPI docs: no hay resultados para "${echoed}". Prueba con otras palabras, o usa listar_operaciones para ver los endpoints de la API.`,
+    );
+  }
+  const count = results.length === 1 ? '1 resultado' : `${results.length} resultados`;
+  const blocks = results.map((result) => `## ${heading(result)}\n${result.url}\n\n${result.excerpt}`);
+  return text([`FiscalAPI docs: ${count} para "${echoed}".`, ...blocks].join('\n\n'));
+}
+
+// Una página sin secciones se indexa entera y su título es el de la página: no se repite.
+function heading({ title, page }: DocsResult): string {
+  return title === page ? title : `${title} (${page})`;
+}
+
+// La consulta admite más caracteres de los que vale la pena repetir en la respuesta.
+function clip(value: string): string {
+  return value.length > MAX_ECHOED_INPUT ? `${value.slice(0, MAX_ECHOED_INPUT)}…` : value;
 }
 
 function groupByTag(entries: readonly CatalogEntry[]): string[] {

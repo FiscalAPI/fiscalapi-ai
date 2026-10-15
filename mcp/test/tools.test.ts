@@ -33,10 +33,10 @@ function operationLines(text: string): string[] {
 }
 
 describe('tools/list', () => {
-  it('expone exactamente listar_operaciones y obtener_operacion con descripciones en español', async () => {
+  it('expone exactamente buscar_docs, listar_operaciones y obtener_operacion con descripciones en español', async () => {
     const { tools } = await client.listTools();
 
-    expect(tools.map((tool) => tool.name).sort()).toEqual(['listar_operaciones', 'obtener_operacion']);
+    expect(tools.map((tool) => tool.name).sort()).toEqual(['buscar_docs', 'listar_operaciones', 'obtener_operacion']);
     const byName = Object.fromEntries(tools.map((tool) => [tool.name, tool]));
     expect(byName.listar_operaciones?.description).toContain('el siguiente paso es llamar a obtener_operacion');
     expect(byName.obtener_operacion?.description).toContain('Usa el operationId exacto que da listar_operaciones');
