@@ -152,6 +152,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+- Timbrado con el plugin, sin skills del usuario: nómina ordinaria quincenal `a153d832-…`, de EKU9003173C9 (registro patronal B5510768108) a FUNK671228PH6. El XML no trae `FormaPago`; trae receptor 605/CN01, contrato 01 con régimen 02, `P112W`, ISR 520 en impuestos retenidos y subsidio 002 en 0. Estatus consultado (simulado).
+- Riesgo del back: no limpia `paymentFormCode` en N (`ComprobanteBuilder.cs:15`) y no fuerza 605/CN01, así que la skill pide no mandar el primero y sí mandar los dos últimos. Los ejemplos de C# y Python de las docs usan 601/G01 y `PaymentFormCode`, y el cURL "por referencias" usa datos por valores.
+- Las guías `md-version` de nómina en sat-docs están vacías: las reglas salen del PDF y de la matriz `errors/nomina-12`.
 
 ### SK-08 — Escribir `fiscalapi-carta-porte`
 **Objetivo:** que el agente emita una Carta Porte 3.1 correcta (ubicaciones, mercancías y autotransporte).
