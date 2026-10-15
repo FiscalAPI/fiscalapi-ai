@@ -116,6 +116,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+- Timbrado con el plugin, sin skills del usuario. PPD `99b472e9-…` (PPD/99, total 2320). Pago `60fc947f-…`: tipo P, XXX, CP01, sin forma ni método en la raíz; DoctoRelacionado a la PPD, parcialidad 1 (2320 → 1160 → 1160) y BaseDR proporcional de 1000. Estatus consultado (simulado).
+- Defecto encontrado: `FechaPago` sale en UTC (18:58) mientras `Fecha` sale en hora local (12:58). Quedó en `known-issues.md` de fapi-back (`fapi-back@c9d1baff`), con prioridad alta.
+- FiscalAPI no busca la factura PPD ni calcula saldos, y no rechaza forma o método de pago en la raíz de un P (lo hace el PAC). Las docs llaman `amount` al importe pagado del documento, pero el campo real es `paymentAmount`.
 
 ### SK-06 — Escribir `fiscalapi-ciclo-de-vida` y `revisar-integracion`
 **Objetivo:** que el agente cubra lo que pasa después de timbrar (cancelar, consultar estado, XML y PDF, correo y webhooks) y revise una integración existente.
