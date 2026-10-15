@@ -25,7 +25,7 @@ Lee la respuesta completa antes de proponer un cambio. No inventes la causa: la 
    | `CRP` | [Errores Pagos 2.0](https://docs.fiscalapi.com/errors/pagos-20.md) |
    | `NOM` | [Errores Nómina 1.2](https://docs.fiscalapi.com/errors/nomina-12.md) |
    | `CP` | [Errores Carta Porte 3.1](https://docs.fiscalapi.com/errors/carta-porte-31.md) |
-   | `CCE` | Comercio Exterior aún no tiene tabla publicada: usa el texto de `message` y `details`, y las reglas de Comercio Exterior en [Mensajes de validación del timbrado](https://docs.fiscalapi.com/errors.md#mensajes-de-validacion-del-timbrado). |
+   | `CCE` | [Errores Comercio Exterior 2.0](https://docs.fiscalapi.com/errors/comercio-exterior-20.md) |
 
    - Si la tabla no tiene el código, o es un rechazo de cancelación (por ejemplo, `CACFDI33`), la causa es el texto de `message` y `details`. Revisa [Cancelar factura](https://docs.fiscalapi.com/invoices-by-value#cancelar-factura) si fallaba una cancelación.
    - Corrige el dato y vuelve a timbrar: un rechazo es definitivo para esa solicitud.

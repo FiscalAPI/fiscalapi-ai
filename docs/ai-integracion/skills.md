@@ -58,6 +58,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica). Lo cubre EV-01.
 **Fuera de alcance:** complementos (SK-04 en adelante).
 **Notas:**
+- `primer-timbre` dio UUID en Node (`6b92a718-…`) y en .NET (`fba6dd24-…`), confirmados con `GET /invoices/{id}`. Corrió contra el back local (PAC de pruebas) con una cuenta creada por el producto (registro, Mailpit y Stripe test). La skill se dispara con "Quiero integrar FiscalAPI…".
+- Las URL `.md` por sección (DOC-01) dan 404 en live hasta el deploy de fapi-docs. El check pasa contra el build local (138 enlaces). `references/sdks.md` documenta las trampas reales de los README: Node `FiscalApiClient`, `double` en Java y fechas.
+- Con resultado incierto (5xx o timeout), el back no guarda la factura, así que "Listar facturas" no la muestra y el camino real es soporte con el `traceIdentifier`. La regla de la skill sigue a las docs: falta decidir si el back debe registrarla.
 
 ### SK-03 — Escribir `fiscalapi-diagnostico` y `explicar-error`
 **Objetivo:** que ante una respuesta de error el agente distinga una validación de FiscalAPI, un rechazo del PAC o un 5xx, y proponga la corrección leyendo la tabla correcta.
