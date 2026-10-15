@@ -1,0 +1,12 @@
+{
+  "name": "fiscalapi",
+  "description": "Plugins de FiscalAPI para agentes de código.",
+  "owner": { "name": "FiscalAPI" },
+  "plugins": [
+    {
+      "name": "fiscalapi",
+      "source": "./",
+      "description": "Skills en español para integrar FiscalAPI (CFDI 4.0) en tu ERP, POS o SaaS."
+    }
+  ]
+}

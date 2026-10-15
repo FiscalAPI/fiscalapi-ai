@@ -120,3 +120,9 @@ Reglas de este archivo:
 - **Por qué:** lo interno (dashboard, Host, DevExtreme) no es contrato, y un segundo documento sería configuración que nadie consume. Así Scalar muestra lo mismo que reciben los integradores.
 - **Consecuencias:** las pruebas de contrato OpenAPI solo cubren operaciones públicas. Las rutas internas se siguen probando por HTTP.
 - **Estado:** confirmada (técnica, la fijó BE-01).
+
+### D-18 — Manifiestos: `.claude-plugin/` para tres hosts y una copia para Cursor
+- **Decisión:** el plugin `fiscalapi` (marketplace `fiscalapi`, `source: "./"`) se declara en `.claude-plugin/plugin.json` y `.claude-plugin/marketplace.json`, sin campo `skills` (cada host descubre `skills/<nombre>/SKILL.md`). Cursor lee `.cursor-plugin/plugin.json`, que es una copia exacta. No se crean `.codex-plugin/` ni `.github/plugin/`.
+- **Por qué:** Codex lee `.claude-plugin/marketplace.json` y `.claude-plugin/plugin.json` (`MARKETPLACE_MANIFEST_RELATIVE_PATHS` y `DISCOVERABLE_PLUGIN_MANIFEST_PATHS` en `openai/codex`), y Copilot los busca en su orden documentado. Un manifiesto por host sería mantenimiento en paralelo (D-02). El campo `skills` se suma al descubrimiento en Claude, lo reemplaza en Cursor y está prohibido en Agent Plugins 1.0.
+- **Consecuencias:** el CI valida con `claude plugin validate . --strict` y exige que la copia de Cursor sea idéntica (`cmp`). El MCP no se declara hasta U-04 (D-07).
+- **Estado:** confirmada (técnica, la fijó SK-01).

@@ -33,6 +33,8 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica). La prueba es el CI de enlaces.
 **Fuera de alcance:** el contenido de las skills (SK-02 en adelante).
 **Notas:**
+- Manifiestos según D-18. Verificado: `claude plugin validate . --strict` en verde; instalación local en Claude Code 2.1.300 con una skill temporal (descubierta sin declararla, 0 MCP), desinstalada después. Codex, Cursor y Copilot no están instalados aquí: se validó su formato contra dotnet/skills, DevExpress/agent-skills y el código de `openai/codex`.
+- `scripts/check-skills.mjs` (frontmatter, 200 y anclas) sale en 1 con un ancla inventada, una página 404 o un `name` inválido (fixture local). El PR de prueba en rojo necesita push: es del usuario. La instalación en Cursor es local (`~/.cursor/plugins/local`); su marketplace es parte de U-04.
 
 ### SK-02 — Escribir `fiscalapi-integracion` y `primer-timbre`
 **Objetivo:** que en un proyecto vacío el agente instale el SDK correcto, configure ambiente y llaves, y logre un UUID en test.
