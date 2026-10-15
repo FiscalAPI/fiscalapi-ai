@@ -52,7 +52,7 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí (contrato). `--filter "FullyQualifiedName~OpenApi"`.
 **Fuera de alcance:** resúmenes por operación (BE-04 y BE-05).
 **Notas:**
-- Bloqueada por **Textos visibles**: ¿apruebas este `info` del documento público? Propuesta: `title` "Fiscalapi API", `version` "4.0" y como `description` el texto del spec de Postman (párrafo de la API, "Modos de operación" y los enlaces a credenciales y datos de prueba) sin la sección "Configura un environment", que es solo de la colección, y con una línea nueva: "Ambientes: `https://test.fiscalapi.com` (pruebas) y `https://live.fiscalapi.com` (producción)".
+- **Textos visibles** aprobados por el usuario (2026-10-15): `title` "Fiscalapi API", `version` "4.0" y como `description` el texto del spec de Postman (párrafo de la API, "Modos de operación" y los enlaces a credenciales y datos de prueba) sin la sección "Configura un environment", más la línea "Ambientes: `https://test.fiscalapi.com` (pruebas) y `https://live.fiscalapi.com` (producción)".
 - La fuente (`postman/specs/Fiscalapi Specification`) solo existe sin rastrear en el working tree `fapi-back`, no en `main`: el texto aprobado se copia al transformer.
 
 ### BE-03 — Servir `/api/openapi/v4.json` anónimo en test y live
@@ -88,7 +88,7 @@ El código de estas tareas va en fapi-back, en la rama `feat/ai-integracion` des
 **Pruebas focalizadas:** sí (contrato). `--filter "FullyQualifiedName~OpenApi"`.
 **Fuera de alcance:** el resto de controllers (BE-05).
 **Notas:**
-- Bloqueada por **Textos visibles**: los resúmenes de Invoices, People y TaxFiles se te muestran en el diff antes del commit. ¿Los redacto y te muestro el diff (sin commit) en cuanto me lo indiques? BE-05 espera a esta tarea.
+- **Textos visibles**: el usuario aprobó (2026-10-15) redactar los resúmenes de Invoices, People y TaxFiles y mostrarle el diff sin commit; el commit espera su OK sobre ese diff. BE-05 espera a esta tarea.
 
 ### BE-05 — Completar `EndpointSummary` en el resto de la superficie
 **Objetivo:** que la lista permitida del trinquete quede vacía.

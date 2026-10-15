@@ -21,7 +21,7 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica). La verificación es el conteo del build.
 **Fuera de alcance:** `llms-full.txt` (D-15).
 **Notas:**
-- Bloqueada: `invoices-by-value` e `invoices-by-reference` (23 H2 cada una, las secciones de facturas) están en `EXCLUDED_ROUTES` de `src/lib/docs.js`: noindex, `Disallow` en robots y fuera del sitemap, de `llms.txt` y de las copias `.md` (94a60f2). ¿Las secciones `.md` y su lista en `llms.txt` las incluyen? Propuesta: sí, sin tocar noindex, robots ni el sitemap.
+- `invoices-by-value` e `invoices-by-reference` (23 H2 cada una, las secciones de facturas) están en `EXCLUDED_ROUTES` de `src/lib/docs.js`: noindex, `Disallow` en robots y fuera del sitemap, de `llms.txt` y de las copias `.md` (94a60f2). Decisión del usuario (2026-10-15): las secciones `.md` y su lista en `llms.txt` sí las incluyen, sin tocar noindex, robots ni el sitemap.
 - Localización (`feat/localization`) agrega `npm run es:diff`, que compara byte a byte `/llms.txt` y las `.md` contra `main`; si se fusiona antes, esta tarea declara su diferencia en `scripts/i18n/es-allowed.json`. Worktree listo: `fapi-docs-ai`.
 
 ### DOC-02 — Generar la página de errores de Pagos
@@ -71,4 +71,4 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** traducir los mensajes del SAT.
 **Notas:**
-- Bloqueada: no encontré la matriz de errores de Comercio Exterior 2.0 del SAT; solo la v1.1 Rev E (`Matriz_de_Errores_CCE_v11_E_.xls`). ¿Me pasas la URL oficial de la 2.0, o la página usa la v1.1 Rev E?
+- El usuario agregó la matriz 2.0 Rev A (2026-10-15): `fapi-reusables/sat-docs/comercio-exterior/catalogs/Matriz_de_Errores_CCE_v2_0_r_A_76f1e17af8.xls`, sin rastrear en el working tree de fapi-reusables (rama `feat/auto-invoice`); se versiona en `feat/ai-integracion` desde `main`.
