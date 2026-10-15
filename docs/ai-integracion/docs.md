@@ -24,22 +24,24 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 - Bloqueada: `invoices-by-value` e `invoices-by-reference` (23 H2 cada una, las secciones de facturas) están en `EXCLUDED_ROUTES` de `src/lib/docs.js`: noindex, `Disallow` en robots y fuera del sitemap, de `llms.txt` y de las copias `.md` (94a60f2). ¿Las secciones `.md` y su lista en `llms.txt` las incluyen? Propuesta: sí, sin tocar noindex, robots ni el sitemap.
 - Localización (`feat/localization`) agrega `npm run es:diff`, que compara byte a byte `/llms.txt` y las `.md` contra `main`; si se fusiona antes, esta tarea declara su diferencia en `scripts/i18n/es-allowed.json`. Worktree listo: `fapi-docs-ai`.
 
-### DOC-02 — Generar páginas de errores de Pagos y Comercio Exterior
-**Objetivo:** que `fiscalapi-diagnostico` y `explicar-error` puedan enlazar los errores `CRP*` y `CCE*`, igual que hoy enlazan los de CFDI 4.0, Nómina y Carta Porte.
+### DOC-02 — Generar la página de errores de Pagos
+**Objetivo:** que `fiscalapi-diagnostico` y `explicar-error` puedan enlazar los errores `CRP*`, igual que hoy enlazan los de CFDI 4.0, Nómina y Carta Porte. Comercio Exterior pasó a DOC-04.
 **Depende de:** —
 **Skills:** `fapi-cfdi-rules`, `fapi-sdk-docs-sync`.
 **Modelo sugerido (opcional):** haiku. Corre el generador existente.
 **Contexto:** RF-03. Las páginas actuales salen de `fapi-reusables/scripts/sat-docs-md-errors-generator/app.py` sobre las matrices de `fapi-reusables/sat-docs`. Ya existen `sat-docs/pagos` y `sat-docs/comercio-exterior`.
 **Alcance:**
-- Correr el generador con las matrices de Pagos 2.0 y Comercio Exterior 2.0 y crear las páginas `errors/pagos-20` y `errors/comercio-exterior-20` con el mismo formato que `errors/cfdi-40`.
+- Correr el generador con la matriz de Pagos 2.0 y crear la página `errors/pagos-20` con el mismo formato que `errors/nomina-12`.
 - Agregarlas a la navegación y a `llms.txt`.
 - Si el generador necesita un cambio, va en fapi-reusables en su propio commit.
 **Criterios de aceptación (todos con `→ verificar`):**
-- Las dos páginas responden en `.md` → verificar: `curl -s localhost:3000/errors/pagos-20.md | grep -c "CRP"` y `curl -s localhost:3000/errors/comercio-exterior-20.md | grep -c "CCE"` mayores que 0.
+- La página responde en `.md` → verificar: `curl -s localhost:3100/errors/pagos-20.md | grep -c "CRP"` mayor que 0.
 - El número de códigos coincide con la matriz del SAT → verificar: conteo de filas de la matriz contra el conteo en la página.
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** traducir los mensajes del SAT.
 **Notas:**
+- Comercio Exterior pasó a DOC-04: `sat-docs/comercio-exterior` no trae su matriz de errores. Las páginas de errores actuales se editaron a mano después de generarse, así que `pagos-20` toma la estructura de `nomina-12` y solo la tabla sale del generador.
+- El generador se corrió con la salida en el scratchpad: fapi-reusables está en `feat/auto-invoice` con cambios propios. 103 códigos CRP en la matriz y en la página. El repo fapi-docs tiene `user.name` local "Fiscalapi": se fija el autor mendozagit al hacer commit.
 
 ### DOC-03 — Corregir el enlace del SDK de Node en `llms.txt`
 **Objetivo:** que los agentes lleguen al repo real del SDK de Node.
@@ -54,3 +56,18 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+
+### DOC-04 — Generar la página de errores de Comercio Exterior
+**Objetivo:** que `fiscalapi-diagnostico` y `explicar-error` puedan enlazar los errores `CCE*`, como DOC-02 hizo con los `CRP*`.
+**Depende de:** —
+**Skills:** `fapi-cfdi-rules`, `fapi-sdk-docs-sync`.
+**Modelo sugerido (opcional):** haiku. Corre el generador existente.
+**Contexto:** RF-03. Se separó de DOC-02: `fapi-reusables/sat-docs/comercio-exterior` no trae la matriz de errores (solo `Catalogos_Comercio_Exterior.xlsx` y las guías, sin ningún código `CCE###`). MED-01 midió 0 facturas de Comercio Exterior en producción.
+**Alcance:** agregar la matriz oficial del SAT a `sat-docs/comercio-exterior/catalogs` (commit propio en fapi-reusables) y crear `errors/comercio-exterior-20` como DOC-02 creó `errors/pagos-20`, con su entrada en la navegación y en la tabla de `errors`.
+**Criterios de aceptación (todos con `→ verificar`):**
+- La página responde en `.md` → verificar: `curl -s localhost:3100/errors/comercio-exterior-20.md | grep -c "CCE"` mayor que 0.
+- El número de códigos coincide con la matriz → verificar: conteo de códigos `CCE` únicos de la matriz contra los de la página.
+**Pruebas focalizadas:** ninguna (no aplica).
+**Fuera de alcance:** traducir los mensajes del SAT.
+**Notas:**
+- Bloqueada: no encontré la matriz de errores de Comercio Exterior 2.0 del SAT; solo la v1.1 Rev E (`Matriz_de_Errores_CCE_v11_E_.xls`). ¿Me pasas la URL oficial de la 2.0, o la página usa la v1.1 Rev E?
