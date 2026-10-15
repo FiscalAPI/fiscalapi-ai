@@ -169,6 +169,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** transporte marítimo, aéreo y ferroviario, salvo que MED-01 diga lo contrario.
 **Notas:**
+- Timbrado con el plugin, sin skills del usuario: traslado `f904a48d-…`, T/XXX con receptor igual al emisor y S01. Origen CMX y destino COA (850 km solo en el destino, igual que `TotalDistRec`), 10 cajas de 120 kg, C2 sin remolques, TPAF01 y operador 01. Estatus consultado (simulado).
+- `FechaHoraSalidaLlegada` sale en UTC, el mismo defecto que `FechaPago`; quedó en `known-issues.md` (`fapi-back@f6ca9a69`). La API de catálogos no expone `c_Estado` de 3 letras ni códigos postales, así que la congruencia CP/colonia la valida solo el PAC.
+- Las docs (`crear-factura-de-carta-porte:126`) dicen que en T `itemCode` debe ser igual a `bienesTranspId`. El caso 14 del SAT usa 78101800, y aquí timbró con 11121900: ninguna regla CP lo exige.
 
 ### SK-09 — Escribir `fiscalapi-comercio-exterior`
 **Objetivo:** que el agente emita un CFDI de exportación con Comercio Exterior 2.0 correcto.
