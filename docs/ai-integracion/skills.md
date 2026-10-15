@@ -99,6 +99,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+- Timbrado en el back local (PAC de pruebas) con el plugin. Ingreso PUE `e84b01e8-…`. Nota de crédito `fb6129f0-…`: el XML trae `TipoRelacion="01"` al ingreso. Global mensual `c4405f7f-…` (XAXX010101000, 616, S01, CP igual al de expedición). Estatus consultado (simulado fuera de Production).
+- Sin las skills del usuario (`--setting-sources project,local`), "factura global" dispara `fiscalapi-ingreso-egreso`. Con ellas, el caso global cargó `fapi-cfdi-rules`, una skill personal: las pruebas de disparo van aisladas.
+- Lo que el back no valida antes del PAC: PPD con forma distinta de 99, y periodicidad 05 o meses 13-18 en la global; además, con `taxObjectCode` 06 u 08 descarta `itemTaxes`. `GET invoices/{id}?details=true` no devuelve `relatedInvoices`, aunque el XML sí los trae. La docs (`invoices-by-value:5943`) etiqueta `E` como "Ingreso".
 
 ### SK-05 — Escribir `fiscalapi-pagos`
 **Objetivo:** que el agente emita un REP 2.0 correcto para facturas PPD y parcialidades.
