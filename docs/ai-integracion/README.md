@@ -40,7 +40,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | BE-03 | Servir `/api/openapi/v4.json` anónimo en test y live | backend | BE-02 | pendiente | |
 | BE-04 | Agregar el trinquete de `EndpointSummary` y cubrir facturas | backend | BE-01 | bloqueado | |
 | BE-05 | Completar `EndpointSummary` en el resto de la superficie | backend | BE-04 | pendiente | |
-| DOC-01 | Generar `.md` por sección H2 en el build | docs | — | pendiente | |
+| DOC-01 | Generar `.md` por sección H2 en el build | docs | — | bloqueado | |
 | DOC-02 | Generar páginas de errores de Pagos y Comercio Exterior | docs | — | pendiente | |
 | DOC-03 | Corregir el enlace del SDK de Node en `llms.txt` | docs | — | pendiente | |
 | SK-01 | Armar el esqueleto del repo, los manifiestos y el CI de enlaces | skills | — | pendiente | |

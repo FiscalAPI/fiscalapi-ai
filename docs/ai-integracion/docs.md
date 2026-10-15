@@ -21,6 +21,8 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica). La verificación es el conteo del build.
 **Fuera de alcance:** `llms-full.txt` (D-15).
 **Notas:**
+- Bloqueada: `invoices-by-value` e `invoices-by-reference` (23 H2 cada una, las secciones de facturas) están en `EXCLUDED_ROUTES` de `src/lib/docs.js`: noindex, `Disallow` en robots y fuera del sitemap, de `llms.txt` y de las copias `.md` (94a60f2). ¿Las secciones `.md` y su lista en `llms.txt` las incluyen? Propuesta: sí, sin tocar noindex, robots ni el sitemap.
+- Localización (`feat/localization`) agrega `npm run es:diff`, que compara byte a byte `/llms.txt` y las `.md` contra `main`; si se fusiona antes, esta tarea declara su diferencia en `scripts/i18n/es-allowed.json`. Worktree listo: `fapi-docs-ai`.
 
 ### DOC-02 — Generar páginas de errores de Pagos y Comercio Exterior
 **Objetivo:** que `fiscalapi-diagnostico` y `explicar-error` puedan enlazar los errores `CRP*` y `CCE*`, igual que hoy enlazan los de CFDI 4.0, Nómina y Carta Porte.
