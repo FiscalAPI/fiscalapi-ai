@@ -1,0 +1,4 @@
+node_modules/
+dist/
+# Lo genera npm run build:data desde el OpenAPI; se publica en el paquete, no en el repo.
+data/

@@ -35,6 +35,9 @@ Antes de escribir código contra el SDK de MCP, se consulta su documentación vi
 **Pruebas focalizadas:** sí (contrato del paquete). `npm test` en `mcp/`.
 **Fuera de alcance:** búsqueda en docs (MCP-02); publicación (MCP-03); herramienta `invocar` (D-07).
 **Notas:**
+- `@modelcontextprotocol/server` 2.3.1 (v2: `McpServer.registerTool` y `serveStdio`, que atiende las eras del protocolo 2025 y 2026) y zod 4.6.7, con versiones exactas. `data/` no se versiona: lo genera `npm run build:data`, que lee live por omisión o `FISCALAPI_OPENAPI_SOURCE`. Las pruebas usan el fixture del OpenAPI de BE-05.
+- Con el fixture: 100 operaciones; el catálogo mide 9,023 caracteres y la operación mayor, createInvoice, 28,130 (se colapsan los media types duplicados de ASP.NET). Arranca en unos 200 ms sin red y pasan 123 pruebas. En Claude Code (`--mcp-config`) respondió una consulta con las dos herramientas.
+- Para publicar hay que regenerar `data/` desde live cuando BE-03 esté desplegado (hoy live responde 401). Eso lo hace MCP-03.
 
 ### MCP-02 — Agregar `buscar_docs` con índice en español
 **Objetivo:** que el agente encuentre la sección de las docs que responde a su duda fiscal sin leer páginas completas.
