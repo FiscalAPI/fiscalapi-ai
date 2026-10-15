@@ -186,6 +186,9 @@ Todo va en fiscalapi-ai, en la rama `feat/ai-integracion`. Reglas comunes a SK-0
 **Pruebas focalizadas:** ninguna (no aplica).
 **Fuera de alcance:** —
 **Notas:**
+- Timbrado con el plugin, sin skills del usuario: exportación definitiva `72064f38-…` con I/02, USD y TipoCambio = TipoCambioUSD 18.3528 (DOF del 14/10, tomado de Banxico por el agente). Receptor XEXX010101000 con USA, 123456789, 616 y S01. `NoIdentificacion` del concepto igual al de la mercancía, ValorDolares 400 y TotalUSD 400.00. Estatus consultado (simulado).
+- El primer intento lo rechazó el PAC con CCE139: con EE. UU. el `estado` del receptor es clave de `c_Estado` (`TX`), no texto. Corregí la skill con la regla de la matriz (CCE139, CCE140).
+- FiscalAPI no exige `02`, el Incoterm ni la congruencia entre conceptos y mercancías, y con USD sin `exchangeRate` escribe TipoCambio 1. El cURL de las docs trae un `valorDolares` (23.47) que no cuadra con 400 USD.
 
 ### SK-10 — Validar en el check semanal los enlaces "Docs:" del OpenAPI
 **Objetivo:** que un título renombrado o retirado en fapi-docs no deje rotos, sin que nadie lo note, los enlaces "Docs:" de las descripciones del OpenAPI público.
