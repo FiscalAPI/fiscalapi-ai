@@ -21,8 +21,9 @@ El código va en fapi-docs (y en fapi-reusables solo si cambia el generador), en
 **Pruebas focalizadas:** ninguna (no aplica). La verificación es el conteo del build.
 **Fuera de alcance:** `llms-full.txt` (D-15).
 **Notas:**
-- `invoices-by-value` e `invoices-by-reference` (23 H2 cada una, las secciones de facturas) están en `EXCLUDED_ROUTES` de `src/lib/docs.js`: noindex, `Disallow` en robots y fuera del sitemap, de `llms.txt` y de las copias `.md` (94a60f2). Decisión del usuario (2026-10-15): las secciones `.md` y su lista en `llms.txt` sí las incluyen, sin tocar noindex, robots ni el sitemap.
-- Localización (`feat/localization`) agrega `npm run es:diff`, que compara byte a byte `/llms.txt` y las `.md` contra `main`; si se fusiona antes, esta tarea declara su diferencia en `scripts/i18n/es-allowed.json`. Worktree listo: `fapi-docs-ai`.
+- Hay 378 secciones H2 en 53 páginas y 429 copias `.md`. Las 427 del plan eran una estimación. La guarda `npm run check:markdown` corre como `postbuild` y compara contra las anclas del HTML construido. Los H2 de `<Guides />`, `<Resources />` y `<Libraries />` no tienen copia.
+- Las secciones de `invoices-by-value` y `invoices-by-reference` (`EXCLUDED_ROUTES`) tienen copia y van en `llms.txt` como `[Página: Sección]`, por decisión del usuario. Como robots no se tocó, su `Disallow` por prefijo también bloquea esas 46 copias para los crawlers que respetan robots.
+- Antes de fusionar, `es:diff` de localización (`feat/localization`) va a marcar `/llms.txt` y las `.md` nuevas: declara la diferencia en `scripts/i18n/es-allowed.json`.
 
 ### DOC-02 — Generar la página de errores de Pagos
 **Objetivo:** que `fiscalapi-diagnostico` y `explicar-error` puedan enlazar los errores `CRP*`, igual que hoy enlazan los de CFDI 4.0, Nómina y Carta Porte. Comercio Exterior pasó a DOC-04.

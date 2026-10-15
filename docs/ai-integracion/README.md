@@ -42,7 +42,7 @@ La siguiente tarea (global o de un área) es la primera fila `pendiente` (de esa
 | BE-03 | Servir `/api/openapi/v4.json` anónimo en test y live | backend | BE-02 | hecho | fapi-back@3ab2a369 |
 | BE-04 | Agregar el trinquete de `EndpointSummary` y cubrir facturas | backend | BE-01 | hecho | fapi-back@2bd55554 |
 | BE-05 | Completar `EndpointSummary` en el resto de la superficie | backend | BE-04 | hecho | fapi-back@bc22dcec |
-| DOC-01 | Generar `.md` por sección H2 en el build | docs | — | pendiente | |
+| DOC-01 | Generar `.md` por sección H2 en el build | docs | — | hecho | fapi-docs@68c74c4 |
 | DOC-02 | Generar la página de errores de Pagos | docs | — | hecho | fapi-docs@816f3a4 |
 | DOC-03 | Corregir el enlace del SDK de Node en `llms.txt` | docs | — | hecho | fapi-docs@b5eec29 |
 | DOC-04 | Generar la página de errores de Comercio Exterior | docs | — | pendiente | |
