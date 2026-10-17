@@ -1,0 +1,10 @@
+{
+  "name": "fiscalapi",
+  "version": "0.1.0",
+  "description": "Skills en español para integrar FiscalAPI (CFDI 4.0) en tu ERP, POS o SaaS: primer timbre en pruebas, complementos, ciclo de vida de la factura y diagnóstico de errores del SAT.",
+  "author": { "name": "FiscalAPI" },
+  "homepage": "https://docs.fiscalapi.com",
+  "repository": "https://github.com/FiscalAPI/fiscalapi-ai",
+  "license": "MPL-2.0",
+  "keywords": ["fiscalapi", "cfdi", "sat", "facturacion-electronica", "mexico"]
+}

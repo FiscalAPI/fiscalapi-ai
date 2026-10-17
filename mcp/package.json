@@ -1,0 +1,57 @@
+{
+  "name": "@fiscalapi/mcp",
+  "version": "0.1.0",
+  "description": "Servidor MCP de solo lectura con el catálogo de operaciones de la API de FiscalAPI (CFDI 4.0) y una búsqueda en su documentación",
+  "type": "module",
+  "bin": {
+    "fiscalapi-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "data",
+    "README.md"
+  ],
+  "scripts": {
+    "build:data": "node scripts/build-data.mjs",
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "fiscalapi",
+    "mcp",
+    "cfdi",
+    "factura",
+    "sat",
+    "mexico"
+  ],
+  "author": "FISCAL API S DE R.L DE C.V",
+  "license": "MPL-2.0",
+  "homepage": "https://docs.fiscalapi.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FiscalAPI/fiscalapi-ai.git",
+    "directory": "mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/FiscalAPI/fiscalapi-ai/issues"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.3.1",
+    "@orama/stemmers": "3.1.18",
+    "@orama/stopwords": "3.1.18",
+    "minisearch": "7.2.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.3.1",
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2",
+    "vitest": "5.0.5"
+  }
+}
