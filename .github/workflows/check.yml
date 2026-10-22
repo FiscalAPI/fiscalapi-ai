@@ -1,8 +1,9 @@
 name: Check
 
-# En cada PR y cada lunes: las docs cambian aunque este repo no, y un enlace roto deja a una skill sin su fuente.
 on:
   pull_request:
+  push:
+    branches: [main]
   schedule:
     - cron: '0 14 * * 1'
   workflow_dispatch:
@@ -11,7 +12,8 @@ permissions:
   contents: read
 
 jobs:
-  check:
+  plugin:
+    name: Plugin (skills, commands and manifests)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -22,12 +24,46 @@ jobs:
         with:
           node-version: 24
 
-      - name: Frontmatter y enlaces de las skills
-        run: node scripts/check-skills.mjs
+      - name: Skill frontmatter and documentation links
+        run: node scripts/check-skills.mts
 
-      - name: Manifiestos de Claude Code, Codex y Copilot
+      - name: Claude Code, Codex and Copilot manifests
         run: npx -y @anthropic-ai/claude-code@2.1.293 plugin validate . --strict
 
-      # Cursor no lee .claude-plugin: su manifiesto es una copia exacta del de Claude Code.
-      - name: Manifiesto de Cursor
+      - name: Cursor manifest matches the Claude Code manifest
         run: cmp .claude-plugin/plugin.json .cursor-plugin/plugin.json
+
+  docs-mcp:
+    name: Docs MCP server
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs-mcp
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: docs-mcp/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+      - name: Generate data from the public sources
+        run: npm run build:data
+
+      - name: Package contents
+        run: npm pack --dry-run
