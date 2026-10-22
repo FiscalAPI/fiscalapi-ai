@@ -1,25 +1,25 @@
 ---
 name: fiscalapi-ciclo-de-vida
-description: Maneja lo que pasa con una factura CFDI de FiscalAPI después de timbrarla. Cubre la cancelación ante el SAT (motivos 01-04, UUID sustituto y aceptación del receptor), el estatus ante el SAT, la descarga del XML y del PDF, el envío por correo y los webhooks (registro, eventos, verificación de la firma, reintentos y pruebas en local con fiscalapi listen). Úsala cuando vayas a cancelar, consultar, descargar o enviar una factura ya emitida, o a recibir eventos de FiscalAPI en tu sistema. Para emitir usa fiscalapi-ingreso-egreso o fiscalapi-pagos; para revisar una integración completa, el comando revisar-integracion.
+description: Gestiona un CFDI de FiscalAPI después de timbrarlo. Cubre la cancelación ante el SAT (motivos 01-04, UUID sustituto y aceptación del receptor), el estatus ante el SAT, la descarga del XML y el PDF, el envío por correo y los webhooks (registro, eventos, firma, reintentos y pruebas en local con `fiscalapi listen`). Úsala cuando vayas a cancelar, consultar, descargar o enviar una factura ya emitida, o a recibir sus eventos en tu sistema. No la uses para emitir (usa `fiscalapi-ingreso-egreso` o `fiscalapi-pagos`) ni para revisar una integración completa (usa el comando `revisar-integracion`).
 ---
 
 # Después de timbrar
 
-Cada operación tiene su sección en las docs (por valores; cambia `invoices-by-value` por `invoices-by-reference` si emitiste por referencias). Léela antes de escribir el cuerpo. El ambiente, las llaves y el SDK están en la skill `fiscalapi-integracion`.
+Cada operación tiene su sección en las docs (por valores; cambia `invoices-by-value` por `invoices-by-reference` si emitiste por referencias). Léela antes de escribir el cuerpo. El ambiente, la API key y el SDK están en la skill `fiscalapi-integracion`.
 
-## 1. Cancelar
+## 1. Cancelación
 
 `DELETE /api/v4/invoices` ([Cancelar factura](https://docs.fiscalapi.com/invoices-by-value/cancelar-factura.md)).
 
 - **Por referencias:** `id` de la factura en FiscalAPI. Firma con el CSD vigente del emisor guardado; una factura emitida por valores no se cancela por referencias.
-- **Por valores:** `invoiceUuid` (el UUID, no el `id`), `tin` del emisor y `taxCredentials` con su `.cer` y su `.key` en base64.
+- **Por valores:** `invoiceUuid` (el UUID, no el `id`), `tin` del emisor y `taxCredentials` con el Certificado CSD (.cer) y la Llave privada CSD (.key) en base64.
 - `cancellationReasonCode` ([motivos](https://docs.fiscalapi.com/catalogs-info/cfdi-40/motivos-de-cancelacion.md)):
   - `01` comprobante emitido con errores con relación: exige `replacementUuid`, el UUID de la factura que la sustituye. Emite primero la sustituta.
   - `02` comprobante emitido con errores sin relación.
   - `03` no se llevó a cabo la operación.
   - `04` operación nominativa relacionada en una factura global.
 
-**La respuesta no confirma la cancelación.** Que el PAC acepte la solicitud (201 o 202 en `invoiceUuids`) solo significa que llegó al SAT: la factura queda en "Cancelando". FiscalAPI consulta al SAT en segundo plano y la deja en "Cancelado" o la regresa a "Vigente" si el receptor la rechaza o no es cancelable. Si el SAT pide la aceptación del receptor, este tiene 3 días hábiles para responder. Entérate del resultado con los webhooks `invoice.canceled` e `invoice.cancellation_rejected`, o consultando el estatus. No marques la factura como cancelada en tu sistema con la respuesta del DELETE.
+**La respuesta no confirma la cancelación.** Que el PAC acepte la solicitud (201 o 202 en `invoiceUuids`) solo significa que llegó al SAT: la factura queda en "Cancelando". El estatus se actualiza después: pasa a "Cancelado", o regresa a "Vigente" si el receptor rechaza la cancelación o la factura no es cancelable. Si el SAT pide la aceptación del receptor, este tiene un plazo para responder ([modelo de respuesta](https://docs.fiscalapi.com/invoices-by-value/modelo-de-respuesta-a-la-consulta-del-estado-de-una-factura.md)). Entérate del resultado con los webhooks `invoice.canceled` e `invoice.cancellation_rejected`, o consultando el estatus. No marques la factura como cancelada en tu sistema con la respuesta del DELETE.
 
 ## 2. Estatus ante el SAT
 
@@ -37,13 +37,13 @@ Los archivos llegan en base64 (`base64File`) con `fileName`. Decodifícalos ante
 
 ## 4. Webhooks
 
-- **Registro:** `POST /api/v4/webhooks` con `url` (https, no localhost), `enabledEvents` (o `*`) y, opcional, `personIds` ([Registrar un webhook](https://docs.fiscalapi.com/webhooks-info/registrar-un-webhook.md)). La respuesta trae el `secret` (`whsec_...`): guárdalo como secreto; con la API key no se vuelve a ver salvo al rotarlo.
+- **Registro:** `POST /api/v4/webhooks` con `url` (https, no localhost), `enabledEvents` (o `*`) y, opcional, `personIds` ([Registrar un webhook](https://docs.fiscalapi.com/webhooks-info/registrar-un-webhook.md)). La respuesta trae el `secret` (`whsec_...`): guárdalo como secreto al recibirlo; con la API key solo se vuelve a obtener al rotar el secreto del webhook.
 - **Eventos:** `invoice.cancellation_requested`, `invoice.canceled`, `invoice.cancellation_rejected`, `download_request.completed`, `download_request.abandoned` y `download_rule.suspended` ([Tipos de evento](https://docs.fiscalapi.com/webhooks-info/tipos-de-evento.md)). Un evento de una factura emitida por valores no trae persona: solo lo reciben los webhooks sin filtro `personIds`.
-- **Verifica la firma de cada entrega** antes de procesarla ([Verificar la firma](https://docs.fiscalapi.com/webhooks-info/verificar-la-firma.md)): usa el helper del SDK (`Webhook.verify` y equivalentes) sobre el **cuerpo crudo** de la petición, sin parsearlo antes. La firma es Standard Webhooks (cabeceras `webhook-id`, `webhook-timestamp` y `webhook-signature`, HMAC-SHA256) y se rechaza con más de 5 minutos de diferencia.
-- **Entrega al menos una vez y sin orden garantizado:** deduplica por `webhook-id`, responde 2xx rápido, procesa después, y consulta el recurso (`relatedObject`) para conocer su estado actual ([Reintentos](https://docs.fiscalapi.com/webhooks-info/reintentos.md)). Si no respondes 2xx, FiscalAPI reintenta hasta 10 veces en unas 75 horas.
-- **Rotación:** al rotar el secreto, el anterior sigue firmando 24 horas y cada entrega lleva las dos firmas ([Rotar el secreto](https://docs.fiscalapi.com/webhooks-info/rotar-el-secreto.md)).
+- **Verifica la firma de cada entrega** antes de procesarla: usa el helper del SDK (`Webhook.verify` y equivalentes) sobre el **cuerpo crudo** de la petición, sin parsearlo antes. La firma sigue la especificación Standard Webhooks (cabeceras `webhook-id`, `webhook-timestamp` y `webhook-signature`, HMAC-SHA256), y el helper rechaza una entrega cuyo `webhook-timestamp` queda fuera de la tolerancia ([Verificar la firma](https://docs.fiscalapi.com/webhooks-info/verificar-la-firma.md)).
+- **Entrega al menos una vez y sin orden garantizado:** deduplica por `webhook-id`, responde 2xx rápido, procesa después, y consulta el recurso (`relatedObject`) para conocer su estado actual. Si no respondes 2xx, FiscalAPI reintenta la entrega según su calendario de [Reintentos](https://docs.fiscalapi.com/webhooks-info/reintentos.md).
+- **Rotación:** al rotar el secreto, el anterior sigue firmando durante un periodo de transición y cada entrega lleva las dos firmas; pasa al helper los dos secretos mientras dure ([Rotar el secreto](https://docs.fiscalapi.com/webhooks-info/rotar-el-secreto.md)).
 - **En local:** `fiscalapi listen --forward-to http://localhost:<puerto>/<ruta>` recibe los eventos de tu cuenta de pruebas y `fiscalapi trigger <tipo>` dispara uno ([Recibir eventos en tu servidor local](https://docs.fiscalapi.com/webhooks-info/local-testing/recibir-eventos-en-tu-servidor-local.md)). La escucha tiene su propio secreto.
 
 ## 5. Fechas
 
-Manda siempre `X-TIME-ZONE`. Sin él, FiscalAPI usa `America/Mexico_City` para leer y escribir las fechas sin zona, y tu sistema puede interpretarlas en otra. El sobre de los eventos de webhook va siempre en UTC con `Z`.
+Manda siempre `X-TIME-ZONE`. Sin él, FiscalAPI usa `America/Mexico_City` para leer y escribir las fechas sin zona, y tu sistema puede interpretarlas en otra. Las fechas de la estructura del evento de webhook van siempre en UTC con `Z`.
