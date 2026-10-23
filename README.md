@@ -35,7 +35,7 @@ El agente carga cada skill cuando la tarea lo requiere.
 
 ## Requisitos
 
-Para timbrar en el ambiente de pruebas necesitas una cuenta, una API key y el tenant. Sigue [Pasos para comenzar](https://docs.fiscalapi.com/quickstart/pasos-para-comenzar.md).
+Para timbrar en el ambiente de pruebas necesitas una cuenta, una API key y el tenant. Sigue [Pasos para comenzar](https://docs.fiscalapi.com/quickstart#pasos-para-comenzar).
 
 ## Instalación
 
