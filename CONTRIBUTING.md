@@ -52,6 +52,10 @@ Convenciones del código:
 - El código y los mensajes internos van en inglés. Los títulos, las descripciones y los resultados de las herramientas van en español, porque los lee el modelo.
 - Cada herramienta es una clase que implementa `McpTool` en `src/tools/` y recibe sus dependencias por interfaces.
 
+### Publicación
+
+El paquete usa la misma versión que la API de FiscalAPI que documenta, fijada en `docs-mcp/package.json`. Al fusionar en `main` un cambio de `docs-mcp/`, el workflow `Publish docs MCP` compila, regenera los datos, verifica el contenido del paquete y lo publica en npm. Si esa versión ya está publicada, no publica: para publicar, sube la versión en `package.json`.
+
 ## Pull requests
 
 El workflow `Check` debe pasar: valida las skills, los manifiestos y el servidor MCP (typecheck, build, pruebas y contenido del paquete).
