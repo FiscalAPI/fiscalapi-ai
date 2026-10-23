@@ -1,6 +1,6 @@
 {
   "name": "fiscalapi",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Skills en español para integrar FiscalAPI (CFDI 4.0) en tu ERP, POS, SaaS o app: primer timbre en el ambiente de pruebas, CFDI/Factura con complementos, ciclo de vida del CFDI y diagnóstico de errores de validación, rechazos del PAC y errores del servidor.",
   "author": {
     "name": "FiscalAPI"
