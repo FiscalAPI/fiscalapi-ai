@@ -1,0 +1,97 @@
+name: Publish docs MCP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs-mcp/**'
+      - '.github/workflows/publish-docs-mcp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-docs-mcp
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish @fiscalapi/docs-mcp to npm
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: docs-mcp
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org/'
+          cache: npm
+          cache-dependency-path: docs-mcp/package-lock.json
+
+      - name: Check whether the version is already published
+        id: version
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          echo "package=$name@$version" >> "$GITHUB_OUTPUT"
+          if npm view "$name@$version" version > /dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$name@$version is already on npm. Bump the version in docs-mcp/package.json to publish."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify npm credentials
+        if: steps.version.outputs.published == 'false'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "$NODE_AUTH_TOKEN" ]; then
+            echo "::error::The NPM_TOKEN secret is missing or empty."
+            exit 1
+          fi
+          if ! npm whoami; then
+            echo "::error::NPM_TOKEN is invalid or expired. Create an npm granular access token with read and write access to @fiscalapi/docs-mcp and update the NPM_TOKEN secret."
+            exit 1
+          fi
+          npm access list packages || echo "The token packages could not be listed."
+
+      - name: Install
+        if: steps.version.outputs.published == 'false'
+        run: npm ci --ignore-scripts
+
+      - name: Typecheck and test
+        if: steps.version.outputs.published == 'false'
+        run: |
+          npm run typecheck
+          npm test
+
+      - name: Build
+        if: steps.version.outputs.published == 'false'
+        run: |
+          npm run build
+          npm run build:data
+
+      - name: Verify package contents
+        if: steps.version.outputs.published == 'false'
+        run: npm run verify:package
+
+      - name: Publish
+        if: steps.version.outputs.published == 'false'
+        run: npm publish --access public --provenance --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Summary
+        if: steps.version.outputs.published == 'false'
+        run: echo "Published ${{ steps.version.outputs.package }}." >> "$GITHUB_STEP_SUMMARY"

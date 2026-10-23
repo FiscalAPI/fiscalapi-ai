@@ -1,6 +1,6 @@
 {
   "name": "@fiscalapi/docs-mcp",
-  "version": "0.1.0",
+  "version": "4.0.461",
   "description": "Servidor MCP de solo lectura con la documentación y la referencia de la API de FiscalAPI (CFDI 4.0) para agentes de código.",
   "type": "module",
   "bin": {
@@ -17,7 +17,8 @@
     "build": "npm run clean && tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json",
     "test": "vitest run",
-    "prepack": "npm run build && npm run build:data"
+    "prepack": "npm run build && npm run build:data",
+    "verify:package": "node scripts/verify-package.ts"
   },
   "keywords": [
     "fiscalapi",
