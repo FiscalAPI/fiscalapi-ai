@@ -27,7 +27,7 @@ Lee la respuesta completa antes de proponer un cambio. No inventes la causa: la 
    | `CP` | [Errores Carta Porte 3.1](https://docs.fiscalapi.com/errors/carta-porte-31.md) |
    | `CCE` | [Errores Comercio Exterior 2.0](https://docs.fiscalapi.com/errors/comercio-exterior-20.md) |
 
-   - Si la tabla no tiene el código, o es un rechazo de cancelación (por ejemplo, `CACFDI33`), la causa es el texto de `message` y `details`. Revisa [Cancelar factura](https://docs.fiscalapi.com/invoices-by-value/cancelar-factura.md) si fallaba una cancelación.
+   - Si la tabla no tiene el código, o es un rechazo de cancelación (422 con `details` en la forma `SAT <código>: <descripción>`), la causa es el texto de `message` y `details`. Si fallaba una cancelación, revisa [Cancelar factura](https://docs.fiscalapi.com/invoices-by-value/cancelar-factura.md) y [qué hacer ante un rechazo](https://docs.fiscalapi.com/cancel-invoice-tutorial/que-hacer-ante-un-rechazo.md).
    - Corrige el dato y vuelve a timbrar: un rechazo es definitivo para esa solicitud.
 
 3. **¿Es un 5xx?** Es un **error del servidor**: no se resuelve cambiando los datos. Ver [Errores del servidor](https://docs.fiscalapi.com/errors/errores-del-servidor.md).

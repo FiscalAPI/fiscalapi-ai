@@ -65,6 +65,7 @@ Las secciones de facturas existen en las dos variantes con la misma ancla: basta
 | Descarga masiva de CFDI del SAT | [Descarga masiva](https://docs.fiscalapi.com/download-info.md) | Ninguna |
 | Validaciones ante el SAT (69-B, sellos, estatus) | [Validaciones SAT](https://docs.fiscalapi.com/sat-validations-info.md) | Ninguna |
 | Autofactura de tickets | [Auto CFDI](https://docs.fiscalapi.com/auto-invoice.md) | Ninguna |
+| Facturar pagos de Stripe sin código | [Stripe App](https://docs.fiscalapi.com/stripe-app.md) | Ninguna |
 
 ## 6. Reglas clave
 
