@@ -1,6 +1,6 @@
 {
   "name": "@fiscalapi/docs-mcp",
-  "version": "4.0.461",
+  "version": "4.0.474",
   "description": "Servidor MCP de solo lectura con la documentación y la referencia de la API de FiscalAPI (CFDI 4.0) para agentes de código.",
   "type": "module",
   "bin": {
