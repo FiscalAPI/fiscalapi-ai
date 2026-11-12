@@ -1,6 +1,6 @@
 ---
 name: fiscalapi-carta-porte
-description: Timbra con FiscalAPI un CFDI/Factura de carta porte (complemento Carta Porte 3.1, autotransporte), de traslado (tipo T) o de ingreso por el flete (tipo I), con moneda, receptor y conceptos según el tipo, ubicaciones con domicilio y distancias, mercancías, autotransporte y figuras de transporte, sin los rechazos CP más comunes. Úsala cuando vayas a timbrar una carta porte o a amparar con CFDI el transporte de mercancías por carretera. No la uses para diagnosticar un error CP que ya devolvió la API (usa `fiscalapi-diagnostico`).
+description: Timbra con Fiscalapi un CFDI/Factura de carta porte (complemento Carta Porte 3.1, autotransporte), de traslado (tipo T) o de ingreso por el flete (tipo I), con moneda, receptor y conceptos según el tipo, ubicaciones con domicilio y distancias, mercancías, autotransporte y figuras de transporte, sin los rechazos CP más comunes. Úsala cuando vayas a timbrar una carta porte o a amparar con CFDI el transporte de mercancías por carretera. No la uses para diagnosticar un error CP que ya devolvió la API (usa `fiscalapi-diagnostico`).
 ---
 
 # CFDI/Factura de carta porte (complemento Carta Porte 3.1, autotransporte)
@@ -18,7 +18,7 @@ Antes de escribir el cuerpo, lee [Crear factura de carta porte](https://docs.fis
 | Receptor | El mismo emisor (CP107) | Quien paga el flete |
 | Uso CFDI | La API fija `S01` | El del receptor |
 | Forma y método de pago | No llevan | Los del cobro |
-| Conceptos (`items`) | Obligatorios; `taxObjectCode` `01` | Clave de servicio de transporte, por ejemplo `78101800` (CP109) |
+| Conceptos (`items`) | Obligatorios; `taxObjectCode` `01` e `itemCode` igual al `bienesTranspId` de su mercancía | Clave de servicio de transporte, por ejemplo `78101800` (CP109) |
 
 En un traslado, la API deja subtotal y total en 0 aunque los conceptos tengan importe. Usa la moneda y el receptor de la tabla: en un traslado, `XXX` y el mismo RFC como emisor y receptor; si no, el PAC rechaza (CP103, CP107).
 
@@ -27,11 +27,11 @@ En un traslado, la API deja subtotal y total en 0 aunque los conceptos tengan im
 La API genera el `IdCCP`, el peso bruto total y el número total de mercancías: no los mandes. Copia los nombres de los campos exactamente como aparecen en el ejemplo de las docs: un nombre distinto deja ese dato fuera del XML.
 
 - **Raíz:** `transpInternacId` (`No` para nacional, con acento en `Sí`), `unidadPesoId` ([unidad de peso](https://docs.fiscalapi.com/catalogs-info/carta-porte-31/clave-unidad-peso.md), por ejemplo `KGM`) y `totalDistRec`, la suma de las distancias de los destinos (CP125, CP126).
-- **Ubicaciones** (al menos un origen y un destino, CP130): `tipoUbicacion` (`Origen` o `Destino`), `idUbicacion` (`OR` o `DE` más 6 dígitos), RFC y nombre del remitente o destinatario, `fechaHoraSalidaLlegada` y, **solo en los destinos**, `distanciaRecorrida` (CP141).
+- **Ubicaciones** (al menos un origen y un destino, CP130): `tipoUbicacion` (`Origen` o `Destino`), `iDUbicacion` (`OR` o `DE` más 6 dígitos), `rFCRemitenteDestinatario` y el nombre del remitente o destinatario, `fechaHoraSalidaLlegada` y, **solo en los destinos**, `distanciaRecorrida` (CP141).
 - **Domicilio de cada ubicación:** `estadoId` (clave de 3 letras del SAT, por ejemplo `CMX`, `JAL`, `COA`), `paisId` `MEX` y `codigoPostalId`; colonia, municipio y localidad deben corresponder a ese código postal y estado; si no, el PAC rechaza (CP143 a CP147).
-- **Mercancías:** `bienesTranspId` ([clave de producto de carta porte](https://docs.fiscalapi.com/catalogs-info/carta-porte-31/clave-prod-serv-cp.md)), `descripcion`, `cantidad`, `claveUnidadId`, `pesoEnKg` (hasta 3 decimales) y `materialPeligrosoId` (`Sí` o `No`, según lo que la clave permita, CP155). Con material peligroso, `cveMaterialPeligrosoId`, `embalajeId` y el seguro de medio ambiente son obligatorios (CP182).
+- **Mercancías:** `bienesTranspId` ([clave de producto de carta porte](https://docs.fiscalapi.com/catalogs-info/carta-porte-31/clave-prod-serv-cp.md)), `descripcion`, `cantidad`, `claveUnidadId`, `pesoEnKg` (hasta 3 decimales) y `materialPeligrosoId` (`Sí` o `No`, según lo que la clave permita, CP155). Con material peligroso, `cveMaterialPeligrosoId` (CP156), `embalajeId` (CP157) y el seguro de medio ambiente (CP182) son obligatorios. Como en el ejemplo, cada mercancía lleva en `cantidadTransporta` la `cantidad` que va de un origen a un destino, con `iDOrigen` e `iDDestino` iguales a los `iDUbicacion` de esas ubicaciones.
 - **Autotransporte:** `permSCTId` ([tipo de permiso](https://docs.fiscalapi.com/catalogs-info/carta-porte-31/tipo-permiso.md)), `numPermisoSCT`, `configVehicularId` ([configuración vehicular](https://docs.fiscalapi.com/catalogs-info/carta-porte-31/config-autotransporte.md)), `pesoBrutoVehicular`, `placaVM` (5 a 7 caracteres sin guiones ni espacios), `anioModeloVM`, `aseguraRespCivil` y `polizaRespCivil`. Los `remolques` (máximo 2, con `subTipoRemId` y `placa`) van o no según la configuración vehicular (CP184): un tractocamión los exige, un camión unitario no.
-- **Figuras de transporte:** al menos el operador (`tipoFiguraId` `01`) con `rfcFigura`, `nombreFigura` y `numLicencia` (CP193, CP194).
+- **Figuras de transporte:** al menos el operador (`tipoFiguraId` `01`) con `rFCFigura`, `nombreFigura` y `numLicencia` (CP193, CP194).
 
 ## 3. Catálogos
 

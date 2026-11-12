@@ -1,6 +1,6 @@
 # fiscalapi-ai
 
-Skills y comandos en español para integrar [FiscalAPI](https://docs.fiscalapi.com) (CFDI 4.0) en tu ERP, POS, SaaS o app desde tu agente de código: Claude Code, Codex, Cursor o GitHub Copilot.
+Skills y comandos en español para integrar [Fiscalapi](https://docs.fiscalapi.com) (CFDI 4.0) en tu ERP, POS, SaaS o app desde tu agente de código: Claude Code, Codex, Cursor o GitHub Copilot.
 
 Las skills no copian la documentación. Llevan al agente a la sección exacta de [docs.fiscalapi.com](https://docs.fiscalapi.com) y le ayudan a decidir qué operación, complemento o catálogo SAT usar.
 
@@ -12,14 +12,14 @@ El agente carga cada skill cuando la tarea lo requiere.
 
 | Skill | Úsala para |
 | --- | --- |
-| `fiscalapi-integracion` | Empezar: ambiente de pruebas, API key y tenant, SDK según el lenguaje y modo por valores o por referencias. |
+| `fiscalapi-integracion` | Empezar: ambiente de pruebas, API key y tenant, SDK según el lenguaje, modo por valores o por referencias, y reintentos sin duplicar con `Idempotency-Key`. |
 | `fiscalapi-ingreso-egreso` | CFDI/Factura de ingreso, CFDI/Factura de egreso (nota de crédito) y CFDI/Factura global. |
 | `fiscalapi-pagos` | CFDI/Factura de pago (complemento de recepción de pagos 2.0) de facturas PPD. |
 | `fiscalapi-nomina` | CFDI/Factura de nómina (complemento de nómina 1.2). |
 | `fiscalapi-carta-porte` | CFDI/Factura de carta porte (complemento Carta Porte 3.1, autotransporte). |
 | `fiscalapi-comercio-exterior` | CFDI/Factura de comercio exterior (complemento Comercio Exterior 2.0). |
 | `fiscalapi-ciclo-de-vida` | Cancelación, estatus ante el SAT, XML, PDF, envío por correo y webhooks. |
-| `fiscalapi-diagnostico` | Interpretar errores de validación, rechazos del PAC y errores del servidor. |
+| `fiscalapi-diagnostico` | Interpretar errores de validación, rechazos del PAC, conflictos de idempotencia, límites de solicitudes y errores del servidor. |
 
 ### Comandos
 
@@ -91,7 +91,7 @@ git clone https://github.com/FiscalAPI/fiscalapi-ai ~/.cursor/plugins/local/fisc
 
 ## Seguridad
 
-- Las skills leen la API key y el tenant de variables de entorno (`FISCALAPI_API_URL`, `FISCALAPI_API_KEY`, `FISCALAPI_TENANT`). No los escribas en el código ni en archivos versionados.
+- Las skills leen la API key y el tenant de variables de entorno (`FISCALAPI_API_URL`, `FISCALAPI_API_KEY`, `FISCALAPI_TENANT_KEY`). No los escribas en el código ni en archivos versionados.
 - Trabaja en el ambiente de pruebas (`https://test.fiscalapi.com`). Timbrar en producción es un acto fiscal irreversible.
 
 ## Soporte

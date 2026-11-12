@@ -43,12 +43,12 @@ describe('tools/list', () => {
 });
 
 describe(TOOL_NAMES.listOperations, () => {
-  it('lists the 100 operations grouped by tag within the size limit', async () => {
+  it('lists the 102 operations grouped by tag within the size limit', async () => {
     const result = await callTool(connection.client, TOOL_NAMES.listOperations);
     const text = textOf(result);
 
     expect(result.isError).toBeFalsy();
-    expect(operationLines(text)).toHaveLength(100);
+    expect(operationLines(text)).toHaveLength(102);
     expect(text).toContain('createInvoice  POST /api/v4/invoices  Emitir (timbrar) una factura CFDI 4.0');
     expect(text).toContain('## Invoices');
     expect(text.length).toBeLessThanOrEqual(MAX_OPERATION_LIST_CHARS);
@@ -85,6 +85,14 @@ describe(TOOL_NAMES.getOperation, () => {
     expect(itemProperties).toHaveProperty('itemCode');
     expect(text).not.toContain('"$ref"');
     expect(text.length).toBeLessThanOrEqual(MAX_CONTRACT_CHARS);
+  });
+
+  it.each(['createInvoice', 'transferStamps', 'createTicket'])('%s documents the optional Idempotency-Key header', async (operationId) => {
+    const contract: unknown = JSON.parse(textOf(await callTool(connection.client, TOOL_NAMES.getOperation, { operationId })));
+
+    expect(jsonAt(contract, 'parameters')).toEqual(
+      expect.arrayContaining([expect.objectContaining({ name: 'Idempotency-Key', in: 'header' })]),
+    );
   });
 
   it.each(operations.map((operation) => operation.operationId))('%s fits the size limit and has no unresolved $ref', async (operationId) => {

@@ -1,7 +1,7 @@
 {
   "name": "@fiscalapi/docs-mcp",
-  "version": "4.0.474",
-  "description": "Servidor MCP de solo lectura con la documentación y la referencia de la API de FiscalAPI (CFDI 4.0) para agentes de código.",
+  "version": "4.0.475",
+  "description": "Servidor MCP de solo lectura con la documentación y la referencia de la API de Fiscalapi (CFDI 4.0) para agentes de código.",
   "type": "module",
   "bin": {
     "fiscalapi-docs-mcp": "dist/index.js"
@@ -31,7 +31,7 @@
     "sat",
     "mexico"
   ],
-  "author": "FiscalAPI",
+  "author": "Fiscalapi",
   "license": "MPL-2.0",
   "homepage": "https://docs.fiscalapi.com",
   "repository": {

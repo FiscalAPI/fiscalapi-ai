@@ -29,7 +29,7 @@ describe(TOOL_NAMES.searchDocs, () => {
     const { tools } = await connection.client.listTools();
 
     const tool = tools.find((candidate) => candidate.name === TOOL_NAMES.searchDocs);
-    expect(tool?.title).toBe('Buscar en la documentación de FiscalAPI');
+    expect(tool?.title).toBe('Buscar en la documentación de Fiscalapi');
     expect(tool?.annotations).toMatchObject({ readOnlyHint: true, destructiveHint: false, openWorldHint: false });
     expect(tool?.inputSchema.required).toEqual(['query']);
   });
@@ -39,7 +39,7 @@ describe(TOOL_NAMES.searchDocs, () => {
     const text = textOf(result);
 
     expect(result.isError).toBeFalsy();
-    expect(text).toMatch(/^FiscalAPI docs: \d+ resultados para "CFDI40147"\./);
+    expect(text).toMatch(/^Fiscalapi docs: \d+ resultados para "CFDI40147"\./);
     expect(text).toContain('https://docs.fiscalapi.com/errors/cfdi-40/errores-cfdi-4-0.md');
     expect(text).toContain('| CFDI40147 |');
   });
@@ -59,7 +59,7 @@ describe(TOOL_NAMES.searchDocs, () => {
   it('titles a section with its page in parentheses', async () => {
     const text = textOf(await searchDocs({ query: 'cancelar una factura', limit: 1 }));
 
-    expect(text).toMatch(/^FiscalAPI docs: 1 resultado para "cancelar una factura"\./);
+    expect(text).toMatch(/^Fiscalapi docs: 1 resultado para "cancelar una factura"\./);
     expect(text).toMatch(/^## Cancelar factura \(.+\)$/m);
   });
 
@@ -102,6 +102,6 @@ describe(TOOL_NAMES.searchDocs, () => {
     const result = await searchDocs(args);
 
     expect(result.isError).toBe(true);
-    expect(textOf(result)).not.toContain('FiscalAPI docs:');
+    expect(textOf(result)).not.toContain('Fiscalapi docs:');
   });
 });

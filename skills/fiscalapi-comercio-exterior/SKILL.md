@@ -1,11 +1,11 @@
 ---
 name: fiscalapi-comercio-exterior
-description: Timbra con FiscalAPI un CFDI/Factura de comercio exterior (complemento Comercio Exterior 2.0, exportación definitiva) con exportación 02, moneda y tipo de cambio USD del DOF, receptor extranjero, clave de pedimento A1, Incoterm, domicilios y mercancías con fracción arancelaria, unidad de aduana y valor en dólares por concepto, sin los rechazos CCE más comunes. Úsala cuando vayas a facturar una venta al extranjero o una exportación de mercancías. No la uses para diagnosticar un error CCE que ya devolvió la API (usa `fiscalapi-diagnostico`).
+description: Timbra con Fiscalapi un CFDI/Factura de comercio exterior (complemento Comercio Exterior 2.0, exportación definitiva) con exportación 02, moneda y tipo de cambio USD del DOF, receptor extranjero, clave de pedimento A1, Incoterm, domicilios y mercancías con fracción arancelaria, unidad de aduana y valor en dólares por concepto, sin los rechazos CCE más comunes. Úsala cuando vayas a facturar una venta al extranjero o una exportación de mercancías. No la uses para diagnosticar un error CCE que ya devolvió la API (usa `fiscalapi-diagnostico`).
 ---
 
 # CFDI/Factura de comercio exterior (complemento Comercio Exterior 2.0, exportación definitiva)
 
-El CFDI/Factura de comercio exterior es una factura de ingreso con el complemento Comercio Exterior 2.0 que ampara la exportación definitiva de mercancías a un receptor en el extranjero. El `valorDolares` de cada mercancía se calcula con el importe de su concepto (sección 3).
+El CFDI/Factura de comercio exterior lleva el complemento Comercio Exterior 2.0 y ampara la exportación definitiva de mercancías a un receptor en el extranjero. Esta skill cubre el caso típico, una factura de ingreso (`I`); también puede ser de egreso (`E`) o de traslado (`T`), y en un traslado en territorio nacional puede coexistir con el complemento Carta Porte (skill `fiscalapi-carta-porte`). El `valorDolares` de cada mercancía se calcula con el importe de su concepto (sección 3).
 
 Antes de escribir el cuerpo, lee [Crear factura de comercio exterior](https://docs.fiscalapi.com/invoices-by-value/crear-factura-de-comercio-exterior.md) (por referencias: [esta sección](https://docs.fiscalapi.com/invoices-by-reference/crear-factura-de-comercio-exterior.md)). El ambiente, la API key y el SDK están en la skill `fiscalapi-integracion`.
 
@@ -22,7 +22,7 @@ Antes de escribir el cuerpo, lee [Crear factura de comercio exterior](https://do
 - `incotermId`: obligatorio con exportación `02` (CCE120), por ejemplo `FOB`, `CIF` o `EXW`.
 - `tipoCambioUSD`: pesos por dólar (sección 3).
 - `emisor.domicilio`: `calle`, `estadoId` (clave de 3 letras, por ejemplo `QUE`), `paisId` `MEX`, `codigoPostalId`, y colonia, localidad y municipio de catálogo que correspondan a ese código postal.
-- `receptor.domicilio`: `paisId` del receptor, distinto de `MEX` (CCE134). Si el país tiene estados en el catálogo `c_Estado` (Estados Unidos, Canadá), `estado` es su clave, por ejemplo `TX`, no "Texas" (CCE139); en otro país es texto libre. `codigoPostal` sigue el formato de códigos postales del país (CCE140), y municipio y colonia van en texto libre. El `numRegIdTrib` del receptor lo toma FiscalAPI del `foreignTin` del CFDI.
+- `receptor.domicilio`: `paisId` del receptor, distinto de `MEX` (CCE134). Si el país tiene estados en el catálogo `c_Estado` (Estados Unidos, Canadá), `estado` es su clave, por ejemplo `TX`, no "Texas" (CCE139); en otro país es texto libre. `codigoPostal` sigue el formato de códigos postales del país (CCE140), y municipio y colonia van en texto libre. El `numRegIdTrib` del receptor lo toma Fiscalapi del `foreignTin` del CFDI.
 - `mercancias[]`, una por concepto:
   - `noIdentificacion`: igual al `itemSku` del concepto.
   - `fraccionArancelariaId`: la fracción vigente de la tarifa ([catálogos](https://docs.fiscalapi.com/catalogs/catalogos-de-comercio-exterior-2-0.md)).

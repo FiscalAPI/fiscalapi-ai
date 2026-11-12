@@ -25,9 +25,9 @@ export class GetOperationTool implements McpTool {
     server.registerTool(
       TOOL_NAMES.getOperation,
       {
-        title: 'Obtener el contrato de una operación de FiscalAPI',
+        title: 'Obtener el contrato de una operación de Fiscalapi',
         description:
-          'Devuelve en JSON el contrato de una operación de la API de FiscalAPI: método HTTP, ruta, descripción con el enlace a su documentación, parámetros, cuerpo de la petición y respuestas, con los esquemas resueltos. ' +
+          'Devuelve en JSON el contrato de una operación de la API de Fiscalapi: método HTTP, ruta, descripción con el enlace a su documentación, parámetros, cuerpo de la petición y respuestas, con los esquemas resueltos. ' +
           `Un esquema que no cabe se resume como x-truncated y uno recursivo como x-recursive, con el nombre del esquema; para conocer sus campos, búscalo por ese nombre con ${TOOL_NAMES.searchDocs}. ` +
           `Úsala antes de escribir el código que llama a la operación. Requiere el operationId exacto que devuelve ${TOOL_NAMES.listOperations}. ${API_SPECIFICATION_NOTICE}`,
         inputSchema,

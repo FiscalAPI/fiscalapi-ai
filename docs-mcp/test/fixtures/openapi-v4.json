@@ -2,7 +2,7 @@
   "openapi": "3.1.1",
   "info": {
     "title": "Fiscalapi API",
-    "description": "API REST para emitir facturas CFDI 4.0 y sus complementos, cancelarlas, validarlas, descargar CFDI del SAT y administrar personas, productos, certificados y créditos. Cada petición es JSON y se autentica con los headers `X-API-KEY` y `X-TENANT-KEY`.\n\nAmbientes: `https://test.fiscalapi.com` (pruebas) y `https://live.fiscalapi.com` (producción).\n\n## Modos de operación\n\n- **[Por valores](https://docs.fiscalapi.com/modes-of-operation):** el cuerpo lleva todos los datos de la factura, incluidos los certificados (CSD) del emisor en base64.\n- **[Por referencias](https://docs.fiscalapi.com/modes-of-operation):** el cuerpo lleva los ids de las personas y los productos ya registrados en tu cuenta, desde el dashboard o la API.\n\nConsulta [cómo obtener tus credenciales](https://docs.fiscalapi.com/credentials-info) y los [datos de prueba](https://docs.fiscalapi.com/testing-data).",
+    "description": "API REST para emitir facturas CFDI 4.0 y sus complementos, cancelarlas, validarlas, descargar CFDI del SAT y administrar personas, productos, certificados y créditos. Cada petición es JSON y se autentica con los headers `X-API-KEY` y `X-TENANT-KEY`.\r\n\r\nAmbientes: `https://test.fiscalapi.com` (pruebas) y `https://live.fiscalapi.com` (producción).\r\n\r\n## Modos de operación\r\n\r\n- **[Por valores](https://docs.fiscalapi.com/modes-of-operation):** el cuerpo lleva todos los datos de la factura, incluidos los certificados (CSD) del emisor en base64.\r\n- **[Por referencias](https://docs.fiscalapi.com/modes-of-operation):** el cuerpo lleva los ids de las personas y los productos ya registrados en tu cuenta, desde el dashboard o la API.\r\n\r\nConsulta [cómo obtener tus credenciales](https://docs.fiscalapi.com/credentials-info) y los [datos de prueba](https://docs.fiscalapi.com/testing-data).",
     "version": "4.0"
   },
   "servers": [
@@ -1208,7 +1208,7 @@
           "DownloadRequests"
         ],
         "summary": "Listar solicitudes de descarga masiva",
-        "description": "Las solicitudes de descarga masiva de CFDI, metadata y Retenciones del SAT del tenant, manuales y automáticas, paginadas con pageNumber y pageSize (10 por omisión, máximo 50). Cada una trae su estado en FiscalAPI (downloadRequestStatus), su estatus ante el SAT (satRequestStatus) y, ya terminada en el SAT, invoiceCount y packageIds. Docs: [listar solicitudes](https://docs.fiscalapi.com/download-requests#listar-solicitudes).",
+        "description": "Las solicitudes de descarga masiva de CFDI, metadata y Retenciones del SAT del tenant, manuales y automáticas, paginadas con pageNumber y pageSize (10 por omisión, máximo 50). Cada una trae su estado en FiscalAPI (downloadRequestStatus), su estatus ante el SAT (satRequestStatus), el CodEstatus y el mensaje de la última respuesta del SAT (satStatusCode y satMessage) y, ya terminada en el SAT, invoiceCount y packageIds. Docs: [listar solicitudes](https://docs.fiscalapi.com/download-requests#listar-solicitudes).",
         "operationId": "listDownloadRequests",
         "parameters": [
           {
@@ -1262,7 +1262,7 @@
           "DownloadRequests"
         ],
         "summary": "Crear una solicitud de descarga masiva",
-        "description": "Pide al SAT en la misma petición, con la FIEL vigente de la persona de la regla, la descarga masiva de la regla downloadRuleId entre startDate y endDate; downloadRequestTypeId debe ser \"Manual\". El periodo admite hasta 31 días (hasta 400 días en reglas de Retenciones); un periodo más largo, una startDate que no sea anterior a endDate, una endDate futura o una persona sin RFC o FIEL vigente responden 400. Responde 404 si la regla no existe; 403 si no está aprobada, si su persona no tiene un asiento activo de Descarga CFDI o en el ambiente de pruebas, y 502 si el SAT rechaza la autenticación o no crea la solicitud. Aceptada, queda en Esperando SAT y FiscalAPI la procesa en segundo plano. Docs: [crear solicitud](https://docs.fiscalapi.com/download-requests#crear-solicitud).",
+        "description": "Pide al SAT en la misma petición, con la FIEL vigente de la persona de la regla, la descarga masiva de la regla downloadRuleId entre startDate y endDate; downloadRequestTypeId debe ser \"Manual\". El periodo admite hasta 31 días (hasta 400 días en reglas de Retenciones); un periodo más largo, una startDate que no sea anterior a endDate, una endDate futura o una persona sin RFC o FIEL vigente responden 400. Responde 404 si la regla no existe; 403 si la suscripción del tenant no incluye Descarga CFDI y Emisión CFDI, si la persona de la regla es el owner del tenant y la persona autenticada no lo es, si la regla no está aprobada, si su persona no tiene un asiento activo de Descarga CFDI o en el ambiente de pruebas, y 502 si el SAT rechaza la autenticación o no crea la solicitud. Si el SAT no la acepta, responde 502 con su CodEstatus y su mensaje en data.satStatusCode y data.satMessage, y la solicitud no se guarda. Aceptada, queda en Esperando SAT y FiscalAPI la procesa en segundo plano. Docs: [crear solicitud](https://docs.fiscalapi.com/download-requests#crear-solicitud).",
         "operationId": "createDownloadRequest",
         "parameters": [
           {
@@ -1354,7 +1354,7 @@
           "DownloadRequests"
         ],
         "summary": "Obtener una solicitud de descarga masiva",
-        "description": "Una solicitud por su id, con su estado en FiscalAPI (downloadRequestStatus: Esperando SAT, Esperando API, Completada o Abandonada) y en el SAT (satRequestStatus). Consúltala hasta que sea Completada para leer sus XML, su metadata o sus paquetes; 404 si no existe en el tenant. Docs: [obtener solicitud](https://docs.fiscalapi.com/download-requests#obtener-solicitud-por-id).",
+        "description": "Una solicitud por su id, con su estado en FiscalAPI (downloadRequestStatus: Esperando SAT, Esperando API, Completada o Abandonada) y en el SAT (satRequestStatus), y el CodEstatus y el mensaje de la última respuesta del SAT (satStatusCode y satMessage). Consúltala hasta que sea Completada para leer sus XML, su metadata o sus paquetes; 404 si no existe en el tenant. Docs: [obtener solicitud](https://docs.fiscalapi.com/download-requests#obtener-solicitud-por-id).",
         "operationId": "getDownloadRequest",
         "parameters": [
           {
@@ -1392,7 +1392,7 @@
           "DownloadRequests"
         ],
         "summary": "Eliminar una solicitud de descarga masiva",
-        "description": "Borra de forma definitiva la solicitud con sus paquetes, XML y metadata; 404 si no existe en el tenant. Docs: [eliminar solicitud](https://docs.fiscalapi.com/download-requests#eliminar-solicitud-por-id).",
+        "description": "Borra de forma definitiva la solicitud con sus paquetes, XML y metadata. Responde 404 si no existe en el tenant y 403 si la persona de su regla es el owner del tenant y la persona autenticada no lo es. Docs: [eliminar solicitud](https://docs.fiscalapi.com/download-requests#eliminar-solicitud-por-id).",
         "operationId": "deleteDownloadRequest",
         "parameters": [
           {
@@ -1819,7 +1819,7 @@
           "DownloadRules"
         ],
         "summary": "Crear una regla de descarga masiva",
-        "description": "Programa la descarga masiva diaria de un RFC: con la regla aprobada y la persona con asiento activo, FiscalAPI pide al SAT cada día, con la FIEL de la persona, los documentos del día anterior. Campos obligatorios: personId, description (máximo 100), satQueryTypeId (CFDI, Metadata o Retenciones), downloadTypeId (Emitidos o Recibidos) y satInvoiceStatusId (Vigente o Cancelado; Cancelado solo con Metadata). Responde 400 si personId no es del tenant o la persona no tiene RFC o FIEL vigente, y 403 si la persona es el owner del tenant y la persona autenticada no lo es, si ya hay una regla igual para el RFC, si no quedan asientos de Descarga CFDI o en el ambiente de pruebas. Docs: [crear regla](https://docs.fiscalapi.com/download-rules#crear-regla).",
+        "description": "Programa la descarga masiva diaria de un RFC: con la regla aprobada y la persona con asiento activo, FiscalAPI pide al SAT cada día, con la FIEL de la persona, los documentos del día anterior. Campos obligatorios: personId, description (máximo 100), satQueryTypeId (CFDI, Metadata o Retenciones), downloadTypeId (Emitidos o Recibidos) y satInvoiceStatusId (Vigente o Cancelado; Cancelado solo con Metadata). Responde 400 si personId no es del tenant o la persona no tiene RFC o FIEL vigente, y 403 si la persona es el owner del tenant y la persona autenticada no lo es, si ya hay una regla igual para el RFC (una Suspendida no cuenta), si no quedan asientos de Descarga CFDI o en el ambiente de pruebas. Docs: [crear regla](https://docs.fiscalapi.com/download-rules#crear-regla).",
         "operationId": "createDownloadRule",
         "parameters": [
           {
@@ -1909,7 +1909,7 @@
           "DownloadRules"
         ],
         "summary": "Actualizar la descripción de una regla de descarga masiva",
-        "description": "Solo cambia description (máximo 100 caracteres); la persona, el tipo de consulta, la dirección y el estatus de los documentos no se editan. El cuerpo lleva el mismo id de la ruta (400 si no coincide) y una description omitida deja la regla sin descripción. Responde 404 si no existe en el tenant y 403 si la regla es del owner del tenant y la persona autenticada no lo es. Docs: [actualizar regla](https://docs.fiscalapi.com/download-rules#actualizar-regla).",
+        "description": "Solo cambia description (máximo 100 caracteres); la persona, el tipo de consulta, la dirección y el estatus de los documentos no se editan. El cuerpo lleva el mismo id de la ruta (400 si no coincide) y una description omitida deja la regla sin descripción. Responde 404 si no existe en el tenant y 403 si la suscripción del tenant no incluye Descarga CFDI y Emisión CFDI o si la regla es del owner del tenant y la persona autenticada no lo es. Docs: [actualizar regla](https://docs.fiscalapi.com/download-rules#actualizar-regla).",
         "operationId": "updateDownloadRule",
         "parameters": [
           {
@@ -2007,7 +2007,7 @@
           "DownloadRules"
         ],
         "summary": "Simular una descarga masiva en el ambiente de pruebas",
-        "description": "Sin contactar al SAT, crea una regla de prueba (CFDI, Recibidos, Vigente) y una solicitud ya Completada con los últimos CFDI timbrados del tenant (hasta 3) como XML, metadata y paquete, y emite el evento download_request.completed. Responde la solicitud creada; 400 en producción o si el tenant no tiene facturas timbradas. Docs: [ambiente de pruebas](https://docs.fiscalapi.com/download-info#ambiente-de-pruebas).",
+        "description": "Sin contactar al SAT, crea una regla de prueba (CFDI, Recibidos, Vigente) y una solicitud ya Completada con los últimos CFDI timbrados del tenant (hasta 3) como XML, metadata y paquete, y emite el evento download_request.completed. Responde la solicitud creada; 400 en producción o si el tenant no tiene facturas timbradas, y 403 si la suscripción del tenant no incluye Descarga CFDI y Emisión CFDI. Docs: [ambiente de pruebas](https://docs.fiscalapi.com/download-info#ambiente-de-pruebas).",
         "operationId": "createDownloadRuleTestRequest",
         "parameters": [
           {
@@ -2733,12 +2733,93 @@
           "Invoices"
         ],
         "summary": "Listar facturas",
-        "description": "Las facturas (CFDI) del tenant, paginadas con pageNumber y pageSize (10 por omisión, máximo 50) y ordenadas de la más antigua a la más reciente. Docs: [por valores](https://docs.fiscalapi.com/invoices-by-value#listar-facturas) y [por referencias](https://docs.fiscalapi.com/invoices-by-reference#listar-facturas).",
+        "description": "Las facturas (CFDI) del tenant, paginadas con pageNumber y pageSize (10 por omisión, máximo 50) y ordenadas de la más antigua a la más reciente; con order=desc, de la más reciente a la más antigua. Se filtran, cada filtro solo si viene, por el periodo de su fecha (from y to, días de México YYYY-MM-DD), issuerTin, recipientTin, typeCode, statusId, series, number y uuid. Docs: [por valores](https://docs.fiscalapi.com/invoices-by-value#listar-facturas) y [por referencias](https://docs.fiscalapi.com/invoices-by-reference#listar-facturas).",
         "operationId": "listInvoices",
         "parameters": [
           {
+            "name": "From",
+            "in": "query",
+            "description": "Primer día de la fecha de la factura (incluido), fecha civil de México YYYY-MM-DD; va junto con to.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "To",
+            "in": "query",
+            "description": "Último día de la fecha de la factura (incluido), fecha civil de México YYYY-MM-DD; va junto con from.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "IssuerTin",
+            "in": "query",
+            "description": "RFC del emisor (issuer.tin), exacto.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "RecipientTin",
+            "in": "query",
+            "description": "RFC del receptor (recipient.tin), exacto.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "TypeCode",
+            "in": "query",
+            "description": "Tipo de comprobante (c_TipoDeComprobante): I, E, T, P o N.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "StatusId",
+            "in": "query",
+            "description": "Estatus de la factura (status.id): B (borrador), V (vigente), C (cancelando) o X (cancelada).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Series",
+            "in": "query",
+            "description": "Serie de la factura, exacta.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Number",
+            "in": "query",
+            "description": "Folio de la factura, exacto.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Uuid",
+            "in": "query",
+            "description": "Folio fiscal (UUID) de la factura.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Order",
+            "in": "query",
+            "description": "Orden por fecha de creación: asc (por omisión, de la más antigua a la más reciente) o desc (las más recientes primero).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "PageNumber",
             "in": "query",
+            "description": "Número de página, desde 1 (por omisión 1).",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
               "type": [
@@ -2751,6 +2832,7 @@
           {
             "name": "PageSize",
             "in": "query",
+            "description": "Facturas por página, de 1 a 50 (por omisión 10).",
             "schema": {
               "pattern": "^-?(?:0|[1-9]\\d*)$",
               "type": [
@@ -2798,6 +2880,16 @@
               "type": "string"
             },
             "example": "America/Mexico_City"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Identificador único de la operación, de 1 a 64 caracteres ASCII visibles (se recomienda un UUID v4). Si la misma petición se repite con la misma llave de idempotencia dentro de las 24 h siguientes, no se vuelve a ejecutar: se devuelve la respuesta original, también si fue un error, con el header Idempotent-Replayed: true. Un 400 de validación no consume la llave de idempotencia. La misma llave de idempotencia con otra petición responde 422 y, mientras la original sigue en proceso, 409.",
+            "schema": {
+              "maxLength": 64,
+              "type": "string"
+            },
+            "example": "550e8400-e29b-41d4-a716-446655440000"
           }
         ],
         "requestBody": {
@@ -3081,7 +3173,7 @@
           "Invoices"
         ],
         "summary": "Enviar una factura por correo",
-        "description": "Envía el PDF y el XML de la factura a toEmail o, si falta, al correo del receptor. Admite el mismo logo y colores que el PDF. El envío se programa y puede tardar unos minutos. Docs: [por valores](https://docs.fiscalapi.com/invoices-by-value#enviar-factura-por-correo) y [por referencias](https://docs.fiscalapi.com/invoices-by-reference#enviar-factura-por-correo).",
+        "description": "Envía el PDF y el XML de la factura a toEmail (hasta 3 correos separados por ';') o, si falta o va vacío, al correo del receptor. Admite el mismo logo y colores que el PDF. El envío se programa y puede tardar unos minutos. 429: demasiados envíos con la misma credencial; el header Retry-After dice en cuántos segundos reintentar. Docs: [por valores](https://docs.fiscalapi.com/invoices-by-value#enviar-factura-por-correo) y [por referencias](https://docs.fiscalapi.com/invoices-by-reference#enviar-factura-por-correo).",
         "operationId": "sendInvoice",
         "parameters": [
           {
@@ -3115,8 +3207,25 @@
           "required": true
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                }
+              }
+            }
           }
         },
         "security": [
@@ -3231,15 +3340,100 @@
         ]
       }
     },
+    "/api/v4/me": {
+      "get": {
+        "tags": [
+          "Me"
+        ],
+        "summary": "Obtener la persona de la credencial",
+        "description": "La persona a la que pertenece la API key: su id, nombre o razón social (legalName), RFC (tin) y correo; su tenant (tenantId), el ambiente que responde (environment: Development, Test o Production), si es el owner del tenant (isOwner), lo que puede hacer (features: roles, permisos concedidos y negados, features del tenant y su suscripción) y sus saldos por tipo de crédito (balances; un tipo que no aparece tiene saldo 0). Sirve para validar una credencial: responde 401 si falta o no es válida la API key o el tenant.",
+        "operationId": "getMe",
+        "parameters": [
+          {
+            "name": "X-TIME-ZONE",
+            "in": "header",
+            "description": "Zona horaria IANA de las fechas sin zona del cuerpo JSON: el request las lee y la respuesta las escribe en ella. Si falta o no es válida, America/Mexico_City. No aplica a los campos que la operación documenta en UTC o en hora civil.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "America/Mexico_City"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfMeDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfMeDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfMeDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseOfObject"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKey": [ ],
+            "TenantKey": [ ]
+          }
+        ]
+      }
+    },
     "/api/v4/people": {
       "get": {
         "tags": [
           "People"
         ],
         "summary": "Listar personas: emisores, receptores, empleados y empleadores",
-        "description": "Todas las personas del tenant en una sola lista, paginadas con pageNumber y pageSize (50 por omisión y máximo). La misma persona puede ser emisor, cliente receptor, empleado o empleador según dónde se use su id. Docs: [emisores](https://docs.fiscalapi.com/issuers#listar-emisores) y [receptores](https://docs.fiscalapi.com/recipients#listar-receptores).",
+        "description": "Todas las personas del tenant en una sola lista, paginadas con pageNumber y pageSize (50 por omisión y máximo). La misma persona puede ser emisor, cliente receptor, empleado o empleador según dónde se use su id. Se filtran, cada filtro solo si viene, por search (razón social, RFC o correo que contienen el texto, sin distinguir mayúsculas) y por userTypeId (T, U o C). Docs: [emisores](https://docs.fiscalapi.com/issuers#listar-emisores) y [receptores](https://docs.fiscalapi.com/recipients#listar-receptores).",
         "operationId": "listPeople",
         "parameters": [
+          {
+            "name": "Search",
+            "in": "query",
+            "description": "Texto a buscar, de 2 a 100 caracteres y sin distinguir mayúsculas: las personas cuya razón social (legalName), RFC (tin) o correo (email) lo contiene.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "UserTypeId",
+            "in": "query",
+            "description": "Tipo de persona (userTypeId): T (tenant), U (usuario) o C (cliente). No es el tipo fiscal (PF o PM).",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "PageNumber",
             "in": "query",
@@ -3291,7 +3485,7 @@
           "People"
         ],
         "summary": "Crear una persona: emisor o cliente receptor",
-        "description": "Da de alta una persona para usar su id como emisor (issuer.id) o cliente receptor (recipient.id) al facturar por referencias, o como empleado o empleador en nómina. legalName, email y password son obligatorios y el correo no debe estar registrado; los datos fiscales van en tin, satTaxRegimeId, satCfdiUseId y zipCode. Docs: [emisores](https://docs.fiscalapi.com/issuers#crear-emisor) y [receptores](https://docs.fiscalapi.com/recipients#crear-receptor).",
+        "description": "Da de alta una persona para usar su id como emisor (issuer.id) o cliente receptor (recipient.id) al facturar por referencias, o como empleado o empleador en nómina. legalName y email son obligatorios y el correo no debe estar registrado; los datos fiscales van en tin, satTaxRegimeId, satCfdiUseId y zipCode. La persona nace sin acceso al portal; con loginEnabled: true (solo el owner) nace con acceso y password es obligatoria. Docs: [emisores](https://docs.fiscalapi.com/issuers#crear-emisor) y [receptores](https://docs.fiscalapi.com/recipients#crear-receptor).",
         "operationId": "createPerson",
         "parameters": [
           {
@@ -3352,14 +3546,6 @@
             "required": true,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "details",
-            "in": "query",
-            "schema": {
-              "type": "boolean",
-              "default": false
             }
           },
           {
@@ -3447,7 +3633,7 @@
           "People"
         ],
         "summary": "Actualizar una persona",
-        "description": "Reemplaza los datos de la persona con el cuerpo completo: un campo omitido se borra (solo userTypeId y taxPassword se conservan). legalName y email son obligatorios. Para cambiar solo algunos campos usa la actualización parcial (PATCH). El id de la ruta y el del cuerpo deben coincidir; un cambio concurrente responde 409. Docs: [emisores](https://docs.fiscalapi.com/issuers#actualizar-emisor) y [receptores](https://docs.fiscalapi.com/recipients#actualizar-receptor).",
+        "description": "Reemplaza los datos de la persona con el cuerpo completo: un campo omitido se borra (solo userTypeId, password, taxPassword y loginEnabled se conservan). legalName y email son obligatorios. Para cambiar solo algunos campos usa la actualización parcial (PATCH). El id de la ruta y el del cuerpo deben coincidir; un cambio concurrente responde 409. Docs: [emisores](https://docs.fiscalapi.com/issuers#actualizar-emisor) y [receptores](https://docs.fiscalapi.com/recipients#actualizar-receptor).",
         "operationId": "updatePerson",
         "parameters": [
           {
@@ -3510,6 +3696,46 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-TIME-ZONE",
+            "in": "header",
+            "description": "Zona horaria IANA de las fechas sin zona del cuerpo JSON: el request las lee y la respuesta las escribe en ella. Si falta o no es válida, America/Mexico_City. No aplica a los campos que la operación documenta en UTC o en hora civil.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "America/Mexico_City"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "security": [
+          {
+            "ApiKey": [ ],
+            "TenantKey": [ ]
+          }
+        ]
+      }
+    },
+    "/api/v4/people/{personId}/tax-files": {
+      "get": {
+        "tags": [
+          "People"
+        ],
+        "summary": "Listar los certificados CSD y FIEL de una persona",
+        "description": "Todos los certificados (.cer) y llaves privadas (.key) de CSD y FIEL de la persona en una sola lista, sin paginar, del vencimiento (validTo) más lejano al más cercano; los que no tienen vencimiento van al final. Solo metadatos: no devuelve el archivo ni la contraseña; para descargar un archivo usa GET /api/v4/tax-files/{id}. La persona misma y el owner pueden pedirlos; para cualquier otra, o una persona que no existe, responde 404. Docs: [listar certificados de una persona](https://docs.fiscalapi.com/tax-files#listar-certificados-de-una-persona).",
+        "operationId": "listPersonTaxFiles",
+        "parameters": [
+          {
+            "name": "personId",
             "in": "path",
             "required": true,
             "schema": {
@@ -4871,9 +5097,17 @@
           "Products"
         ],
         "summary": "Listar productos",
-        "description": "Los productos y servicios del tenant ordenados por description, paginados con pageNumber y pageSize (10 por omisión, máximo 50). Cada uno trae su clave de producto o servicio del SAT (satProductCodeId), su clave de unidad (satUnitMeasurementId), su objeto de impuesto (satTaxObjectId) y sus impuestos (productTaxes). Docs: [listar productos](https://docs.fiscalapi.com/products#listar-productos).",
+        "description": "Los productos y servicios del tenant ordenados por description, paginados con pageNumber y pageSize (10 por omisión, máximo 50). Cada uno trae su clave de producto o servicio del SAT (satProductCodeId), su clave de unidad (satUnitMeasurementId), su objeto de impuesto (satTaxObjectId) y sus impuestos (productTaxes). Con search, solo los productos cuya description o satProductCodeId contienen el texto, sin distinguir mayúsculas. Docs: [listar productos](https://docs.fiscalapi.com/products#listar-productos).",
         "operationId": "listProducts",
         "parameters": [
+          {
+            "name": "Search",
+            "in": "query",
+            "description": "Texto a buscar, de 2 a 100 caracteres y sin distinguir mayúsculas: los productos cuya descripción (description) o clave de producto o servicio del SAT (satProductCodeId) lo contiene.",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "PageNumber",
             "in": "query",
@@ -5380,6 +5614,16 @@
               "type": "string"
             },
             "example": "America/Mexico_City"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Identificador único de la operación, de 1 a 64 caracteres ASCII visibles (se recomienda un UUID v4). Si la misma petición se repite con la misma llave de idempotencia dentro de las 24 h siguientes, no se vuelve a ejecutar: se devuelve la respuesta original, también si fue un error, con el header Idempotent-Replayed: true. Un 400 de validación no consume la llave de idempotencia. La misma llave de idempotencia con otra petición responde 422 y, mientras la original sigue en proceso, 409.",
+            "schema": {
+              "maxLength": 64,
+              "type": "string"
+            },
+            "example": "550e8400-e29b-41d4-a716-446655440000"
           }
         ],
         "requestBody": {
@@ -5897,17 +6141,9 @@
           "Tickets"
         ],
         "summary": "Crear un ticket",
-        "description": "Registra una venta pagada del punto de venta y cobra 1 crédito de ticket. Responde el código del ticket y la URL del portal para su QR. Exige el feature Auto CFDI. 201: el ticket nuevo. 200: el ticket original, porque la Idempotency-Key ya se usó con el mismo cuerpo (no cobra otra vez). 400: el cuerpo no tiene la estructura esperada o le faltan datos. 401: sin API key o JWT válidos. 403: la persona no tiene el permiso Tickets.Create, el tenant no tiene Auto CFDI o no hay saldo de créditos de ticket. 409: el emisor ya tiene un ticket activo con esa serie y folio (data.existingTicketId), u otro ticket con la misma serie y folio o la misma Idempotency-Key cambió al mismo tiempo. 422: una regla fiscal o aritmética no se cumple, el emisor no puede facturar, o la Idempotency-Key ya se usó con otro cuerpo.",
+        "description": "Registra una venta pagada del punto de venta y cobra 1 crédito de ticket. Responde el código del ticket y la URL del portal para su QR. Exige el feature Auto CFDI. 201: el ticket nuevo. 400: el cuerpo no tiene la estructura esperada o le faltan datos. 401: sin API key o JWT válidos. 403: la persona no tiene el permiso Tickets.Create, el tenant no tiene Auto CFDI o no hay saldo de créditos de ticket. 409: el emisor ya tiene un ticket activo con esa serie y folio (data.existingTicketId), u otro ticket con la misma serie y folio cambió al mismo tiempo. 422: una regla fiscal o aritmética no se cumple o el emisor no puede facturar.",
         "operationId": "createTicket",
         "parameters": [
-          {
-            "name": "Idempotency-Key",
-            "in": "header",
-            "description": "Llave de idempotencia opcional: repetirla con el mismo cuerpo devuelve el ticket original.",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "X-TIME-ZONE",
             "in": "header",
@@ -5916,6 +6152,16 @@
               "type": "string"
             },
             "example": "America/Mexico_City"
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Identificador único de la operación, de 1 a 64 caracteres ASCII visibles (se recomienda un UUID v4). Si la misma petición se repite con la misma llave de idempotencia dentro de las 24 h siguientes, no se vuelve a ejecutar: se devuelve la respuesta original, también si fue un error, con el header Idempotent-Replayed: true. Un 400 de validación no consume la llave de idempotencia. La misma llave de idempotencia con otra petición responde 422 y, mientras la original sigue en proceso, 409.",
+            "schema": {
+              "maxLength": 64,
+              "type": "string"
+            },
+            "example": "550e8400-e29b-41d4-a716-446655440000"
           }
         ],
         "requestBody": {
@@ -5941,26 +6187,6 @@
         "responses": {
           "201": {
             "description": "Created",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfTicketIngestedDto"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfTicketIngestedDto"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiResponseOfTicketIngestedDto"
-                }
-              }
-            }
-          },
-          "200": {
-            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -7890,6 +8116,45 @@
             "items": {
               "$ref": "#/components/schemas/PortalTaxRegimeDto"
             }
+          },
+          "succeeded": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "details": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "httpStatusCode": {
+            "$ref": "#/components/schemas/HttpStatusCode"
+          },
+          "traceIdentifier": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ApiResponseOfMeDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/MeDto"
+              }
+            ]
           },
           "succeeded": {
             "type": "boolean"
@@ -11020,7 +11285,8 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Contraseña del portal. Obligatoria solo si loginEnabled es true."
           },
           "phoneNumber": {
             "type": [
@@ -11087,6 +11353,13 @@
               "null",
               "string"
             ]
+          },
+          "loginEnabled": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Acceso al portal: true para que la persona inicie sesión en el dashboard; omitido o false, nace sin acceso. Solo lo da el owner. No afecta a la API key."
           }
         }
       },
@@ -11162,6 +11435,22 @@
           }
         }
       },
+      "CreditBalanceDto": {
+        "type": "object",
+        "properties": {
+          "creditType": {
+            "$ref": "#/components/schemas/CreditTypeId"
+          },
+          "available": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
       "CreditTypeId": {
         "type": "integer",
         "format": "int32"
@@ -11196,6 +11485,20 @@
               "string"
             ],
             "format": "double"
+          }
+        }
+      },
+      "DeniedPermissionDto": {
+        "required": [
+          "missingFeatures"
+        ],
+        "type": "object",
+        "properties": {
+          "missingFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -12103,6 +12406,50 @@
           }
         }
       },
+      "MeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "legalName": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "tin": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "email": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "tenantId": {
+            "type": "string"
+          },
+          "environment": {
+            "type": "string"
+          },
+          "isOwner": {
+            "type": "boolean"
+          },
+          "features": {
+            "$ref": "#/components/schemas/PersonFeaturesDto"
+          },
+          "balances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreditBalanceDto"
+            }
+          }
+        }
+      },
       "OnBehalfOfRequest": {
         "type": "object",
         "properties": {
@@ -12558,7 +12905,8 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Contraseña del portal; omitida, se conserva. Obligatoria para dar el acceso al portal a una persona sin contraseña."
           },
           "satTaxRegimeId": {
             "type": [
@@ -12619,6 +12967,13 @@
               "null",
               "string"
             ]
+          },
+          "loginEnabled": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Acceso al portal: true lo da y false lo quita (y cierra la sesión de la persona); omitido o igual al actual, no cambia. Solo lo cambia el owner, y el owner siempre lo tiene. No afecta a la API key."
           }
         }
       },
@@ -12818,6 +13173,117 @@
           }
         },
         "additionalProperties": false
+      },
+      "PersonFeatureDto": {
+        "required": [
+          "values"
+        ],
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "object",
+            "additionalProperties": {
+              "pattern": "^-?(?:0|[1-9]\\d*)$",
+              "type": [
+                "integer",
+                "string"
+              ],
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "PersonFeaturesDto": {
+        "required": [
+          "isOwner",
+          "roles",
+          "permissions",
+          "denied",
+          "features",
+          "subscription",
+          "seatAssignments"
+        ],
+        "type": "object",
+        "properties": {
+          "isOwner": {
+            "type": "boolean"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "denied": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/DeniedPermissionDto"
+            }
+          },
+          "features": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/PersonFeatureDto"
+            }
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/PersonSubscriptionDto"
+          },
+          "seatAssignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PersonSeatAssignmentDto"
+            }
+          }
+        }
+      },
+      "PersonSeatAssignmentDto": {
+        "required": [
+          "featureCode",
+          "units",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "featureCode": {
+            "type": "string"
+          },
+          "units": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SeatAssignmentStatus"
+          }
+        }
+      },
+      "PersonSubscriptionDto": {
+        "required": [
+          "status",
+          "isAvailable"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "isAvailable": {
+            "type": "boolean"
+          }
+        }
       },
       "PortalBrand": {
         "required": [
@@ -13533,6 +13999,12 @@
             }
           }
         }
+      },
+      "SeatAssignmentStatus": {
+        "enum": [
+          "Active",
+          "Suspended"
+        ]
       },
       "SelfInvoiceRecipient": {
         "required": [
@@ -14556,7 +15028,8 @@
             "type": [
               "null",
               "string"
-            ]
+            ],
+            "description": "Contraseña del portal; omitida, se conserva. Obligatoria para dar el acceso al portal a una persona sin contraseña."
           },
           "satTaxRegimeId": {
             "type": [
@@ -14617,6 +15090,13 @@
               "null",
               "string"
             ]
+          },
+          "loginEnabled": {
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "description": "Acceso al portal: true lo da y false lo quita (y cierra la sesión de la persona); omitido o igual al actual, no cambia. Solo lo cambia el owner, y el owner siempre lo tiene. No afecta a la API key."
           }
         }
       },
@@ -15048,6 +15528,9 @@
     },
     {
       "name": "Manifests"
+    },
+    {
+      "name": "Me"
     },
     {
       "name": "People"
