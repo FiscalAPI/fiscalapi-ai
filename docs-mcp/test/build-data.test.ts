@@ -294,7 +294,7 @@ describe('scripts/build-data.ts', { timeout: SCRIPT_TIMEOUT_MS }, () => {
     expect(jsonAt(manifest, 'openApi', 'operations')).toBe(102);
     expect(jsonAt(manifest, 'openApi', 'sha256')).toMatch(/^[0-9a-f]{64}$/);
     expect(jsonAt(manifest, 'docs', 'baseUrl')).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
-    expect(jsonAt(manifest, 'docs', 'sections')).toBe(439);
+    expect(jsonAt(manifest, 'docs', 'sections')).toBe(441);
     expect(jsonAt(manifest, 'docs', 'sha256')).toMatch(/^[0-9a-f]{64}$/);
     expect(existsSync(new URL(DATA_FILES.docsIndex, dataDirUrl()))).toBe(true);
   });
