@@ -39,7 +39,7 @@ export class SearchDocsTool implements McpTool {
     server.registerTool(
       TOOL_NAMES.searchDocs,
       {
-        title: 'Buscar en la documentación de FiscalAPI',
+        title: 'Buscar en la documentación de Fiscalapi',
         description:
           'Busca en las secciones de docs.fiscalapi.com: guías, reglas fiscales del SAT, catálogos SAT, errores de validación y rechazos del PAC por código (por ejemplo CFDI40147) y la referencia de cada operación. ' +
           'Devuelve por resultado el título, la página, la URL .md de la sección y un extracto. ' +
@@ -56,12 +56,12 @@ export class SearchDocsTool implements McpTool {
     const echoedQuery = echo(query);
     if (results.length === 0) {
       return textResult(
-        `FiscalAPI docs: no hay resultados para "${echoedQuery}". Prueba con otras palabras o usa ${TOOL_NAMES.listOperations} para ver las operaciones de la API.`,
+        `Fiscalapi docs: no hay resultados para "${echoedQuery}". Prueba con otras palabras o usa ${TOOL_NAMES.listOperations} para ver las operaciones de la API.`,
       );
     }
     const count = results.length === 1 ? '1 resultado' : `${results.length} resultados`;
     const blocks = results.map((result) => `## ${resultHeading(result)}\n${result.url}\n\n${result.excerpt}`);
-    return textResult([`FiscalAPI docs: ${count} para "${echoedQuery}".`, ...blocks].join('\n\n'));
+    return textResult([`Fiscalapi docs: ${count} para "${echoedQuery}".`, ...blocks].join('\n\n'));
   }
 }
 

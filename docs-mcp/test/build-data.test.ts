@@ -291,17 +291,17 @@ describe('scripts/build-data.ts', { timeout: SCRIPT_TIMEOUT_MS }, () => {
   it('records the OpenAPI and docs hashes and counts in the source manifest', () => {
     const manifest: unknown = JSON.parse(readFileSync(new URL(DATA_FILES.source, dataDirUrl()), 'utf8'));
 
-    expect(jsonAt(manifest, 'openApi', 'operations')).toBe(100);
+    expect(jsonAt(manifest, 'openApi', 'operations')).toBe(102);
     expect(jsonAt(manifest, 'openApi', 'sha256')).toMatch(/^[0-9a-f]{64}$/);
     expect(jsonAt(manifest, 'docs', 'baseUrl')).toMatch(/^http:\/\/127\.0\.0\.1:\d+$/);
-    expect(jsonAt(manifest, 'docs', 'sections')).toBe(383);
+    expect(jsonAt(manifest, 'docs', 'sections')).toBe(441);
     expect(jsonAt(manifest, 'docs', 'sha256')).toMatch(/^[0-9a-f]{64}$/);
     expect(existsSync(new URL(DATA_FILES.docsIndex, dataDirUrl()))).toBe(true);
   });
 });
 
 const SMALL_LLMS = [
-  '# FiscalAPI',
+  '# Fiscalapi',
   '',
   '- Endpoints live under `/api/v4/`.',
   '- [Page](https://docs.fiscalapi.com/page.md): description.',

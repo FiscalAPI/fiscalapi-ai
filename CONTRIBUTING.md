@@ -46,6 +46,8 @@ npm test
 node scripts/snapshot-docs.ts https://docs.fiscalapi.com test/fixtures/docs-corpus.json.gz
 ```
 
+Si el cambio documenta una versión de la API que todavía no está publicada, toma las fuentes de un build local de fapi-docs y del back: `node scripts/snapshot-docs.ts http://localhost:3001 test/fixtures/docs-corpus.json.gz`, el OpenAPI de `<back local>/api/openapi/v4.json` en `test/fixtures/openapi-v4.json`, y en la raíz `node scripts/check-skills.mts --docs-origin http://localhost:3001 --openapi docs-mcp/test/fixtures/openapi-v4.json`.
+
 Convenciones del código:
 
 - TypeScript estricto, sin `any`, sin aserciones de tipo y sin comentarios. Si un fragmento necesita explicarse, se reescribe con nombres más claros.
@@ -54,7 +56,7 @@ Convenciones del código:
 
 ### Publicación
 
-El paquete usa la misma versión que la API de FiscalAPI que documenta, fijada en `docs-mcp/package.json`. Al fusionar en `main` un cambio de `docs-mcp/`, el workflow `Publish docs MCP` compila, regenera los datos, verifica el contenido del paquete y lo publica en npm. Si esa versión ya está publicada, no publica: para publicar, sube la versión en `package.json`.
+El paquete usa la misma versión que la API de Fiscalapi que documenta, fijada en `docs-mcp/package.json`. Al fusionar en `main` un cambio de `docs-mcp/`, el workflow `Publish docs MCP` compila, regenera los datos, verifica el contenido del paquete y lo publica en npm. Si esa versión ya está publicada, no publica: para publicar, sube la versión en `package.json`.
 
 ## Pull requests
 

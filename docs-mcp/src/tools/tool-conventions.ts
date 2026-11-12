@@ -14,6 +14,6 @@ export const READ_ONLY_ANNOTATIONS = {
 export const API_SPECIFICATION_NOTICE =
   'Solo consulta la especificación pública de la API (OpenAPI): no llama a la API y no requiere API key.';
 
-export const PUBLIC_DOCS_NOTICE = 'Solo consulta la documentación pública de FiscalAPI: no llama a la API y no requiere API key.';
+export const PUBLIC_DOCS_NOTICE = 'Solo consulta la documentación pública de Fiscalapi: no llama a la API y no requiere API key.';
 
 export const MAX_IDENTIFIER_CHARS = 100;

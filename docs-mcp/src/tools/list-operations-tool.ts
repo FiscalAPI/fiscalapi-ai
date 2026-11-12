@@ -17,9 +17,9 @@ export class ListOperationsTool implements McpTool {
     server.registerTool(
       TOOL_NAMES.listOperations,
       {
-        title: 'Listar las operaciones de la API de FiscalAPI',
+        title: 'Listar las operaciones de la API de Fiscalapi',
         description:
-          'Devuelve las operaciones de la API REST de FiscalAPI (CFDI/Factura 4.0 y complementos, cancelación, descarga masiva del SAT, personas, productos, certificados, webhooks y más), agrupadas por tag, con operationId, método HTTP, ruta y resumen. ' +
+          'Devuelve las operaciones de la API REST de Fiscalapi (CFDI/Factura 4.0 y complementos, cancelación, descarga masiva del SAT, personas, productos, certificados, webhooks y más), agrupadas por tag, con operationId, método HTTP, ruta y resumen. ' +
           `Úsala para encontrar la operación que necesitas; después llama a ${TOOL_NAMES.getOperation} con su operationId. ${API_SPECIFICATION_NOTICE}`,
         inputSchema: z.object({
           tag: z
@@ -39,7 +39,7 @@ export class ListOperationsTool implements McpTool {
     if (operations.length === 0) {
       return errorResult(`No hay operaciones con el tag "${tag ?? ''}". Tags disponibles: ${this.#operations.tags.join(', ')}.`);
     }
-    const header = `FiscalAPI: ${operations.length} operaciones. Para ver el contrato de una, llama a ${TOOL_NAMES.getOperation} con su operationId.`;
+    const header = `Fiscalapi: ${operations.length} operaciones. Para ver el contrato de una, llama a ${TOOL_NAMES.getOperation} con su operationId.`;
     return textResult([header, ...linesGroupedByTag(operations)].join('\n'));
   }
 }

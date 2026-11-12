@@ -22,6 +22,9 @@ const EXPECTED_SECTIONS: ReadonlyArray<readonly [query: string, expectedUrl: Reg
   ['enviar factura por correo', /enviar-factura-por-correo/],
   ['CFDI40147', /errores-cfdi-4-0/],
   ['objeto de impuesto', /objeto-imp/],
+  ['idempotencia', /\/idempotent-requests\//],
+  ['Idempotency-Key', /\/idempotent-requests\//],
+  ['límite de solicitudes', /errors\/limite-de-solicitudes/],
 ];
 
 const docs = DocsIndex.load(dataDirUrl());

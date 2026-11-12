@@ -1,8 +1,8 @@
 # @fiscalapi/docs-mcp
 
-Servidor MCP de solo lectura que pone la especificación pública de la API de [FiscalAPI](https://docs.fiscalapi.com) (CFDI 4.0) y su documentación al alcance de tu agente de código, para que escriba la integración sin adivinar rutas, campos ni reglas fiscales.
+Servidor MCP de solo lectura que pone la especificación pública de la API de [Fiscalapi](https://docs.fiscalapi.com) (CFDI 4.0) y su documentación al alcance de tu agente de código, para que escriba la integración sin adivinar rutas, campos ni reglas fiscales.
 
-El servidor no llama a la API de FiscalAPI y no requiere API key. La especificación y el índice de la documentación vienen dentro del paquete, así que funciona sin conexión.
+El servidor no llama a la API de Fiscalapi y no requiere API key. La especificación y el índice de la documentación vienen dentro del paquete, así que funciona sin conexión.
 
 ## Requisitos
 

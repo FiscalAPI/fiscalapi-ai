@@ -1,6 +1,6 @@
 ---
 name: fiscalapi-ingreso-egreso
-description: Timbra con FiscalAPI CFDI/Factura de ingreso, CFDI/Factura de egreso (nota de crédito) y CFDI/Factura global sin rechazos del SAT. Decide régimen fiscal y uso CFDI del receptor, objeto de impuesto e impuestos del concepto, método y forma de pago, la relación de la nota de crédito y la información global de público en general, y busca las claves del SAT con la API de catálogos. Úsala cuando vayas a emitir o corregir una factura de ingreso, egreso o global. No la uses para el complemento de pago (usa `fiscalapi-pagos`) ni para un error que ya devolvió la API (usa `fiscalapi-diagnostico`).
+description: Timbra con Fiscalapi CFDI/Factura de ingreso, CFDI/Factura de egreso (nota de crédito) y CFDI/Factura global sin rechazos del SAT. Decide régimen fiscal y uso CFDI del receptor, objeto de impuesto e impuestos del concepto, método y forma de pago, la relación de la nota de crédito y la información global de público en general, y busca las claves del SAT con la API de catálogos. Úsala cuando vayas a emitir o corregir una factura de ingreso, egreso o global. No la uses para el complemento de pago (usa `fiscalapi-pagos`) ni para un error que ya devolvió la API (usa `fiscalapi-diagnostico`).
 ---
 
 # CFDI/Factura de ingreso, CFDI/Factura de egreso (nota de crédito) y CFDI/Factura global
@@ -33,17 +33,17 @@ Una clave que no existe responde 400 en su campo antes de llegar al PAC ([Claves
 3. `recipient.cfdiUseCode` debe aplicar al tipo de persona y admitir el régimen del receptor ([usos de CFDI](https://docs.fiscalapi.com/catalogs-info/cfdi-40/usos-de-cfdi.md)). Si no, CFDI40161. G01 y G03 no admiten 616 ni 605; S01 y CP01 admiten cualquier régimen.
 4. `recipient.zipCode` es el código postal del domicilio fiscal del receptor, 5 dígitos, el de su constancia.
 
-FiscalAPI valida 2 y 3 antes del PAC y responde 400 en `Recipient.TaxRegimeCode` o `Recipient.CfdiUseCode` ([Mensajes de validación del timbrado](https://docs.fiscalapi.com/errors/mensajes-de-validacion-del-timbrado.md)). Pide los datos fiscales al receptor; no los deduzcas.
+Fiscalapi valida 2 y 3 antes del PAC y responde 400 en `Recipient.TaxRegimeCode` o `Recipient.CfdiUseCode` ([Mensajes de validación del timbrado](https://docs.fiscalapi.com/errors/mensajes-de-validacion-del-timbrado.md)). Pide los datos fiscales al receptor; no los deduzcas.
 
 ## 3. Conceptos e impuestos
 
 - `itemCode` es la clave de producto o servicio (8 caracteres) y `unitOfMeasurementCode` la de unidad; búscalas en el catálogo. Por valores, `itemSku` es obligatorio.
 - `taxObjectCode` ([objeto de impuesto](https://docs.fiscalapi.com/catalogs-info/cfdi-40/objeto-imp.md)):
   - `02` (sí objeto de impuesto) exige al menos un impuesto en `itemTaxes`; sin él, la API responde 400 antes de llegar al PAC.
-  - `01`, `03` y `04` no desglosan impuestos: deja `itemTaxes` vacío.
+  - `01`, `03`, `04` y `05` no desglosan impuestos: deja `itemTaxes` vacío (CFDI40172).
   - `07` exige IEPS (`003`) y no admite IVA.
 - Cada impuesto: `taxCode` (`001` ISR, `002` IVA, `003` IEPS), `taxTypeCode` (`Tasa`, `Cuota` o `Exento`), `taxRate` y `taxFlagCode` (`T` traslado, `R` retención). Una retención no puede ser `Exento`.
-- Decimales: `quantity`, `unitPrice`, `discount` y `taxRate` admiten hasta 6; FiscalAPI no redondea ([Decimales](https://docs.fiscalapi.com/errors/decimales-de-importes-cantidades-y-tasas.md)). En JavaScript, redondea antes de enviar: `0.1 + 0.2` llega como `0.30000000000000004` y se rechaza.
+- Decimales: `quantity`, `unitPrice`, `discount` y `taxRate` admiten hasta 6; Fiscalapi no redondea ([Decimales](https://docs.fiscalapi.com/errors/decimales-de-importes-cantidades-y-tasas.md)). En JavaScript, redondea antes de enviar: `0.1 + 0.2` llega como `0.30000000000000004` y se rechaza.
 
 ## 4. Método y forma de pago
 
@@ -63,21 +63,22 @@ FiscalAPI valida 2 y 3 antes del PAC y responde 400 en `Recipient.TaxRegimeCode`
 
 ## 6. Factura global (público en general)
 
-- Receptor: `tin` `XAXX010101000`, `legalName` `PUBLICO EN GENERAL`, `taxRegimeCode` `616`, `cfdiUseCode` `S01` y `zipCode` igual a `expeditionZipCode`. Con el RFC genérico, otro régimen da CFDI40159 y otro código postal CFDI40149.
-- `globalInformation` es obligatoria en un ingreso a público en general (CFDI40130): `periodicityCode` (`01` diario, `02` semanal, `03` quincenal, `04` mensual, `05` bimestral), `monthCode` y `year` ([periodo de facturación](https://docs.fiscalapi.com/global-invoice-info/periodo-de-facturacion.md)).
-  - `year` es el de la fecha de la factura o hasta 5 años antes (CFDI40136).
+- Receptor: `tin` `XAXX010101000`, `legalName` `PUBLICO EN GENERAL`, `taxRegimeCode` `616`, `cfdiUseCode` `S01` y `zipCode` igual a `expeditionZipCode`. Fiscalapi lo valida antes del PAC: con el RFC genérico, otro régimen responde 400 en `Recipient.TaxRegimeCode` (equivale a CFDI40159) y otro código postal en `Recipient.ZipCode` (CFDI40149), sin consumir timbre.
+- `globalInformation` es obligatoria en un ingreso a público en general; sin ella, 400 en `GlobalInformation` (CFDI40130): `periodicityCode` (`01` diario, `02` semanal, `03` quincenal, `04` mensual, `05` bimestral), `monthCode` y `year` ([periodo de facturación](https://docs.fiscalapi.com/global-invoice-info/periodo-de-facturacion.md)).
+  - `year` es el de la fecha de la factura o hasta 5 años antes; si no, 400 en `GlobalInformation.Year` (CFDI40136).
   - `monthCode` va de `01` a `12`; solo con `05` (bimestral, emisor en régimen 621) va de `13` a `18`. Si no se cumple, el PAC rechaza: CFDI40132 si hay periodicidad `05` y el emisor no está en 621, y CFDI40134 o CFDI40135 si el mes no corresponde a la periodicidad.
-- Método `PUE`. Conceptos: `itemCode` `01010101`, unidad `ACT`, cantidad 1, un concepto por venta o ticket con su folio en `itemSku`.
-- Si las ventas están registradas como tickets en FiscalAPI, usa [Crear factura global de tickets](https://docs.fiscalapi.com/tickets/crear-factura-global-de-tickets.md).
+- Método `PUE`. Conceptos: `itemCode` `01010101`, unidad `ACT`, cantidad 1, un concepto por venta o ticket con su folio en `itemSku`. Fiscalapi calcula los impuestos de un concepto sobre una sola base: una venta con tasas distintas (por ejemplo IVA 16 % y 0 %) va en un concepto por grupo de impuestos, todos con el mismo `itemSku` ([aspectos clave](https://docs.fiscalapi.com/global-invoice-info/aspectos-clave-de-la-factura-global.md)).
+- Si las ventas están registradas como tickets en Fiscalapi, usa [Crear factura global de tickets](https://docs.fiscalapi.com/tickets/crear-factura-global-de-tickets.md).
 
 ## 7. Antes de timbrar
 
 1. Cada clave del SAT existe en su catálogo; las confirmaste con la API de catálogos.
 2. El régimen fiscal, el uso CFDI y el código postal del receptor vienen de su constancia y corresponden a su tipo de persona.
-3. Cada concepto con `taxObjectCode` `02` lleva al menos un impuesto; con `01`, `03` o `04`, `itemTaxes` va vacío.
+3. Cada concepto con `taxObjectCode` `02` lleva al menos un impuesto; con `01`, `03`, `04` o `05`, `itemTaxes` va vacío.
 4. Ninguna cantidad, precio, descuento o tasa trae más de 6 decimales.
 5. Con PPD, `paymentFormCode` es `99`; con PUE, es la forma real del pago.
 6. La nota de crédito relaciona el `uuid` de la factura de ingreso con un solo tipo de relación.
 7. La factura global lleva el receptor genérico, `globalInformation` y un `monthCode` que corresponde a la periodicidad (con `05`, el emisor está en régimen 621).
+8. Generaste una `Idempotency-Key` para esta factura y la guardaste: si la respuesta no llega, reintenta con ella (sección 6 de la skill `fiscalapi-integracion`).
 
 Guarda el `id` y el `uuid` que devuelve la API. Si el PAC rechaza, busca el código en [Errores CFDI 4.0](https://docs.fiscalapi.com/errors/cfdi-40/errores-cfdi-4-0.md) o usa la skill `fiscalapi-diagnostico`. Para cancelar, consultar el estatus ante el SAT o descargar el XML y el PDF, usa la skill `fiscalapi-ciclo-de-vida`; ahí está también cómo se comporta el estatus en el ambiente de pruebas.

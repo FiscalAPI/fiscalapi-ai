@@ -1,6 +1,6 @@
 ---
 name: fiscalapi-pagos
-description: Timbra con FiscalAPI el CFDI/Factura de pago (complemento de recepción de pagos 2.0, REP, tipo P) de una factura PPD, en una o varias parcialidades. Decide si hace falta (PUE o PPD), arma `complement.payment` con saldo anterior, importe pagado y saldo insoluto, el número de parcialidad, el tipo de cambio y la equivalencia, y los impuestos del documento pagado. Úsala cuando el receptor pague una factura con método PPD o te pidan un REP. No la uses para la factura original (usa `fiscalapi-ingreso-egreso`) ni para un error CRP que ya devolvió la API (usa `fiscalapi-diagnostico`).
+description: Timbra con Fiscalapi el CFDI/Factura de pago (complemento de recepción de pagos 2.0, REP, tipo P) de una factura PPD, en una o varias parcialidades. Decide si hace falta (PUE o PPD), arma `complement.payment` con saldo anterior, importe pagado y saldo insoluto, el número de parcialidad, el tipo de cambio y la equivalencia, y los impuestos del documento pagado. Úsala cuando el receptor pague una factura con método PPD o te pidan un REP. No la uses para la factura original (usa `fiscalapi-ingreso-egreso`) ni para un error CRP que ya devolvió la API (usa `fiscalapi-diagnostico`).
 ---
 
 # CFDI/Factura de pago (complemento de recepción de pagos 2.0)
@@ -44,9 +44,9 @@ Cada `paidInvoices[]`:
 
 ## 3. Impuestos del documento pagado
 
-- `taxObjectCode` repite el objeto de impuesto de la factura: con `02`, `paidInvoiceTaxes` es obligatorio (CRP20246); con `01`, `03` o `04` no debe venir (CRP20247).
-- Cada impuesto lleva `base`, `taxCode`, `taxTypeCode`, `taxRate` y `taxFlagCode` como en la factura. La `base` es **proporcional a lo pagado**: si se paga la mitad de una factura de 1,000 + IVA, la base del IVA es 500. FiscalAPI calcula el importe de cada impuesto y los totales del pago a partir de esa base.
-- Decimales: hasta 6 en importes y tasas, 10 en `equivalence`; FiscalAPI no redondea.
+- `taxObjectCode` repite el objeto de impuesto de la factura: con `02`, `paidInvoiceTaxes` es obligatorio (CRP20246); con `01`, `03`, `04` o `05` no debe venir (CRP20247).
+- Cada impuesto lleva `base`, `taxCode`, `taxTypeCode`, `taxRate` y `taxFlagCode` como en la factura. La `base` es **proporcional a lo pagado**: si se paga la mitad de una factura de 1,000 + IVA, la base del IVA es 500. Fiscalapi calcula el importe de cada impuesto y los totales del pago a partir de esa base. Manda siempre `base`: si la omites, la API toma `paidInvoices[].subTotal` como base de todos los impuestos, lo que solo es correcto con un único impuesto.
+- Decimales: hasta 6 en importes y tasas, 10 en `equivalence`; Fiscalapi no redondea.
 
 ## 4. Antes de timbrar
 
@@ -54,5 +54,6 @@ Cada `paidInvoices[]`:
 2. `partialityNumber` y `previousBalance` siguen al pago anterior; `remainingBalance` cuadra.
 3. La forma del pago no es `99` y, si mandas cuentas o RFC bancarios, la forma los admite (CRP20221 a CRP20228).
 4. No hay `paymentFormCode` ni `paymentMethodCode` en la raíz.
+5. Generaste una `Idempotency-Key` para este pago y la guardaste: si la respuesta no llega, reintenta con ella (sección 6 de la skill `fiscalapi-integracion`). Un CFDI de pago duplicado descuadra la parcialidad y los saldos que lleva tu sistema.
 
 Si el PAC rechaza, busca el código en [Errores Pagos 2.0](https://docs.fiscalapi.com/errors/pagos-20/errores-pagos-2-0.md) o usa la skill `fiscalapi-diagnostico`. Para cancelar, consultar el estatus ante el SAT o descargar el XML y el PDF, usa la skill `fiscalapi-ciclo-de-vida`.

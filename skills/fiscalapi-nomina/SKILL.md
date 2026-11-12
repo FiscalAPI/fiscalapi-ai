@@ -1,6 +1,6 @@
 ---
 name: fiscalapi-nomina
-description: Timbra con FiscalAPI un CFDI/Factura de nómina (tipo N, complemento de nómina 1.2), ordinaria o extraordinaria, con los datos del empleado y del empleador por referencias o por valores, el periodo, las percepciones, las deducciones, los otros pagos con el subsidio para el empleo y las incapacidades, sin los rechazos NOM más comunes. Úsala cuando vayas a timbrar recibos de nómina o a registrar los datos laborales de empleados y empleadores. No la uses para diagnosticar un error NOM que ya devolvió la API (usa `fiscalapi-diagnostico`).
+description: Timbra con Fiscalapi un CFDI/Factura de nómina (tipo N, complemento de nómina 1.2), ordinaria o extraordinaria, con los datos del empleado y del empleador por referencias o por valores, el periodo, las percepciones, las deducciones, los otros pagos con el subsidio para el empleo y las incapacidades, sin los rechazos NOM más comunes. Úsala cuando vayas a timbrar recibos de nómina o a registrar los datos laborales de empleados y empleadores. No la uses para diagnosticar un error NOM que ya devolvió la API (usa `fiscalapi-diagnostico`).
 ---
 
 # CFDI/Factura de nómina (complemento de nómina 1.2)
@@ -15,7 +15,7 @@ Antes de escribir el cuerpo, lee [Crear factura de nómina](https://docs.fiscala
 
 - `typeCode` `N`, `currencyCode` `MXN`, `exportCode` `01`, `paymentMethodCode` `PUE`, `series`, `date` y `expeditionZipCode`.
 - **No mandes** `paymentFormCode` (el CFDI de nómina no lleva forma de pago), `items`, `paymentConditions` ni `exchangeRate`. La API arma el concepto (84111505, ACT, "Pago de nómina") con importe = percepciones + otros pagos y descuento = deducciones.
-- **Emisor** (empleador): si es persona física, necesita su CURP (NOM5); una persona moral no la lleva.
+- **Emisor** (empleador): si es persona física, necesita su CURP (NOM6); una persona moral no la lleva (NOM5).
 - **Receptor** (empleado): RFC de persona física (13 caracteres, NOM8), `taxRegimeCode` `605` (sueldos y salarios, NOM11) y `cfdiUseCode` `CN01` (nómina, NOM12). Mándalos siempre en el cuerpo: con otros valores, el PAC rechaza con esos códigos.
 
 ## 2. Datos laborales: por referencias o por valores
@@ -38,11 +38,14 @@ Datos del empleado que más fallan:
 | `paymentDate`, `initialPaymentDate`, `finalPaymentDate` | `yyyy-MM-dd`; el inicio no puede ser posterior al fin (NOM35) |
 | `daysPaid` | Días pagados del periodo |
 | `earnings.earnings[]` | Percepciones: `earningTypeCode` ([tipos](https://docs.fiscalapi.com/catalogs-info/nomina-12/tipo-percepcion.md); `001` sueldos), `code`, `concept`, `taxedAmount`, `exemptAmount` |
-| `earnings.otherPayments[]` | Otros pagos: `otherPaymentTypeCode` ([tipos](https://docs.fiscalapi.com/catalogs-info/nomina-12/tipo-otro-pago.md)), `amount`; el subsidio para el empleo (`002`) lleva además `subsidyCaused` |
+| `earnings.otherPayments[]` | Otros pagos: `otherPaymentTypeCode` ([tipos](https://docs.fiscalapi.com/catalogs-info/nomina-12/tipo-otro-pago.md)), `code`, `concept`, `amount`; el subsidio para el empleo (`002`) lleva además `subsidyCaused` |
 | `deductions[]` | Deducciones: `deductionTypeCode` ([tipos](https://docs.fiscalapi.com/catalogs-info/nomina-12/tipo-deduccion.md); `001` seguridad social, `002` ISR), `code`, `concept`, `amount` |
 | `disabilities[]` | Incapacidades: `disabilityDays`, `disabilityTypeCode`, `monetaryAmount` |
 
 `otherPayments` va **dentro** de `earnings`; `deductions` y `disabilities` van en la raíz de `payroll`. La API calcula todos los totales (percepciones, gravado, exento, deducciones, impuestos retenidos y otros pagos): no los mandes. El monto de la deducción `002` (ISR) lo calcula tu sistema de nómina y lo mandas ya calculado.
+
+- Las claves de percepción, deducción y otro pago van siempre con 3 cifras (`001`, `002`, `071`), aunque la tabla del catálogo las muestre sin ceros: la API las compara exactas.
+- Las percepciones `022`, `023` o `025` exigen `earnings.severance` (separación o indemnización) y las `039` o `044` exigen `earnings.retirement` (jubilación, pensión o retiro); sin esas percepciones, esos nodos no van (NOM78, NOM79).
 
 ## 4. Subsidio para el empleo
 
